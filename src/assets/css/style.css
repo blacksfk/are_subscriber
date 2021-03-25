@@ -1,0 +1,122 @@
+/**
+ * Variables
+ */
+:root {
+	/* colours */
+	--primary: #11c6de;
+	--secondary: #40d865;
+	--tertiary: #df1212;
+
+	/* transition durations */
+	--dur-btn: 0.25s;
+	--dur-input: 0.5s;
+}
+
+/**
+ * General styling
+ */
+body {
+	color: var(--primary);
+	background-color: black;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+	width: 60%;
+	margin: auto;
+}
+
+.content {
+	width: 100%;
+	margin: 1% auto;
+	padding: 20px;
+	background-color: hsl(0, 0%, 5%);
+	border-radius: 4px;
+}
+
+.content-narrow {
+	width: 50%;
+}
+
+/**
+ * Buttons
+ */
+.btn {
+	border: 0;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 4px;
+	padding: 10px;
+	background-color: black;
+	transition: color, background-color var(--dur-btn);
+}
+
+.btn:hover {
+	color: black;
+	cursor: pointer;
+}
+
+.btn-primary {
+	color: var(--primary);
+	border-color: var(--primary);
+}
+
+.btn-primary:hover {
+	color: black;
+	background-color: var(--primary);
+}
+
+
+.btn-secondary {
+	color: var(--secondary);
+	border-color: var(--secondary);
+}
+
+.btn-secondary:hover {
+	color: black;
+	background-color: var(--secondary);
+}
+
+.btn-tertiary {
+	color: var(--tertiary);
+	border-color: var(--tertiary);
+}
+
+.btn-tertiary:hover {
+	color: black;
+	background-color: var(--tertiary);
+}
+
+/**
+ * Forms
+ */
+.input-group {
+	margin: 15px 0;
+}
+
+.input-group > input, select {
+	width: 90%;
+}
+
+.input-group > label {
+	transition: color var(--dur-input);
+}
+
+.input-group:focus-within > label {
+	color: var(--secondary);
+}
+
+.input {
+	border: 0;
+	outline: none;
+	color: var(--primary);
+	background-color: transparent;
+	padding: 5px 10px;
+	border-bottom: 1px solid var(--primary);
+	transition: color, border-bottom-color var(--dur-input);
+}
+
+.input:focus {
+	color: var(--secondary);
+	border-bottom-color: var(--secondary);
+}
