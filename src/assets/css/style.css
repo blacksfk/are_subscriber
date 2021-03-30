@@ -79,6 +79,26 @@ body {
 	align-self: flex-end;
 }
 
+.led {
+	border-radius: 50%;
+	border: 0;
+}
+
+.led-sm {
+	height: 15px;
+	width: 15px;
+}
+
+.led-green {
+	background-image: radial-gradient(circle, lime, #40d865);
+	box-shadow: 0 0 20px 5px #40d865;
+}
+
+.led-red {
+	background-image: radial-gradient(circle, red, #df1212);
+	box-shadow: 0 20px 5px #df1212;
+}
+
 /**
  * Tables
  */
