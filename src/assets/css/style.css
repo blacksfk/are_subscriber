@@ -47,6 +47,38 @@ body {
 	overflow: hidden;
 }
 
+.row {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.space-between {
+	justify-content: space-between;
+}
+
+.col-33 {
+	flex: 1 1 33.3333333%;
+}
+
+.col-20 {
+	flex: 1 1 20%;
+}
+
+.col-start {
+	text-align: left;
+	align-self: flex-start;
+}
+
+.col-centre {
+	text-align: center;
+	align-self: center;
+}
+
+.col-end {
+	text-align: right;
+	align-self: flex-end;
+}
+
 /**
  * Tables
  */
