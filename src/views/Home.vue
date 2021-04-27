@@ -91,7 +91,7 @@ import Car from "@/components/Car.vue";
 import Misc from "@/components/Misc.vue";
 import Conditions from "@/components/Conditions.vue";
 import Motor from "@/components/Motor.vue";
-import Flag from "@/components/Flag.vue";
+// import Flag from "@/components/Flag.vue";
 
 function data() {
 	return {
@@ -386,7 +386,7 @@ export default {
 		Misc,
 		Conditions,
 		Motor,
-		Flag
+		// Flag
 	}
 };
 </script>
