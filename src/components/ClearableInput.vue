@@ -51,6 +51,7 @@ function emit(event) {
 }
 
 function clear() {
+	this.$emit("clear");
 	this.$emit("input", "");
 }
 
