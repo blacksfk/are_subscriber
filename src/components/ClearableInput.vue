@@ -1,7 +1,7 @@
 <template>
 	<div class="clearable-input">
 		<input :type="type" :name="name" class="input" :value="value" @input="emit" :placeholder="placeholder">
-		<button class="clearable-input-btn" type="button" tabindex="-1" v-show="value.length > 0" @click="clear">&times;</button>
+		<button class="clearable-input-btn" type="button" tabindex="-1" v-show="value && value.length > 0" @click="clear">&times;</button>
 	</div>
 </template>
 <style>
