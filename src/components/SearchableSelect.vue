@@ -159,11 +159,13 @@ function created() {
 }
 
 /**
- * Event emitter. Emits an "input" event and the clicked option value.
+ * Event emitter. Emits an "input" event and the clicked option value, along with
+ * hiding the drop down list.
  * @param  {any}  option
  * @return {void}
  */
 function emit(option) {
+	this.visible = false;
 	this.$emit("input", option);
 }
 
