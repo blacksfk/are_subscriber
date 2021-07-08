@@ -378,7 +378,7 @@ function delta(newTelemetry) {
  * @return {Boolean}
  */
 function filterChannel(channel, term) {
-	return channel.name.toLowerCase().includes(term);
+	return channel.name.toLowerCase().includes(term.toLowerCase());
 }
 
 /**
