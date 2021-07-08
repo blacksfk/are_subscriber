@@ -1,6 +1,6 @@
 <template>
 <div class="searchable-select">
-	<clearable-input class="searchable-select-input" type="text" :name="name" :placeholder="placeholder" :value="input" @input="debouncedInput" @clear="clearInput"></clearable-input>
+	<clearable-input class="searchable-select-input" type="text" :name="name" :placeholder="placeholder" :value="input" @input="debouncedInput" @clear="clearInput"/>
 	<button type="button" tabindex="-1" class="btn btn-primary" @click="visible = !visible">
 		<!-- show down arrow when options not visible -->
 		<span v-show="!visible">&#8964;</span>
