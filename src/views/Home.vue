@@ -1,52 +1,56 @@
 <template>
 <div>
-	<modal v-show="!connected" @ready="$refs.id.focus()" @close="connected = true">
+	<!-- connection modal -->
+	<modal v-show="!connected" @close="connected = true">
 		<h3>Join a channel</h3>
 		<form action="connect" method="post">
 			<div class="input-group">
 				<label for="id">Channel ID</label>
-				<input type="text" name="id" id="id" class="input" placeholder="Channel ID" v-model="channel.id" ref="id">
+				<searchable-select name="id" :options="channels" v-model="channel" display-key="name" placeholder="Channel ID" :filter="filterChannel"/>
 			</div>
 			<div class="input-group">
 				<label for="Password">Password</label>
-				<input type="password" name="password" id="password" placeholder="Channel password" class="input" v-model="channel.password">
+				<clearable-input type="password" name="password" v-model="channel.password" placeholder="Channel password"/>
 			</div>
 			<input type="submit" value="Connect" class="btn btn-primary">
 		</form>
 	</modal>
-	<div class="grid-container">
-		<div class="grid-item header">
-			<div class="row space-between">
-				<div class="col-33 col-start">
-					<div class="row">
-						<div class="led led-sm led-red"></div>
-					</div>
-				</div>
-				<div class="col-33 col-centre">
-					<span>{{ telemetry.hud.session.type }}</span>
-				</div>
-				<div class="col-33 col-end"><span>{{ timeRemaining }}</span> remaining</div>
+
+	<!-- header -->
+	<div class="header">
+		<div class="row space-between">
+			<div class="col-33 col-start">
+				<div class="led led-sm" :class="ledClass" :title="ledTooltip"></div>
+			</div>
+			<div class="col-33 col-centre">
+				<h2><span>{{ telemetry.hud.session.type }}</span> &commat; <span>{{ telemetry.properties.track.name }}</span> | <in-game-clock :clock="telemetry.hud.session.clock"></in-game-clock></h2>
+			</div>
+			<div class="col-33 col-end"><span>{{ timeRemaining }} remaining</span></div>
+		</div>
+		<div class="row">
+			<div class="col-33 col-centre">
+				<curr-laptime :current="telemetry.hud.laptimes.current" :delta="telemetry.hud.laptimes.delta" :delta-positive="telemetry.hud.laptimes.isDeltaPositive" :valid="telemetry.hud.laptimes.isValidLap"></curr-laptime>
 			</div>
 		</div>
+		<tab-row v-model="currTab" :items="['Telemetry', 'Lap times']"></tab-row>
+	</div>
+
+	<!-- telemetry tab -->
+	<div class="grid-container" v-show="currTab === 0">
+
+		<!-- grid row 1 -->
 		<div class="grid-item">
-			<laptimes v-bind="telemetry.hud.laptimes"></laptimes>
-		</div>
-		<div class="grid-item">
-			<misc :player="telemetry.properties.player" :track="telemetry.properties.track.name" :pit-window="telemetry.properties.pitWindow" :clock="telemetry.hud.session.clock"></misc>
-			<!-- <car :id="telemetry.properties.car.model"></car> -->
+			<status :position="telemetry.hud.position" :laps="telemetry.hud.laps" :distance-traveled="telemetry.hud.distanceTraveled" :tyre-set="telemetry.hud.tyreSet"></status>
 		</div>
 		<div class="grid-item">
 			<conditions v-bind="telemetry.hud.conditions" :temp="telemetry.physics.temp"></conditions>
 		</div>
 		<div class="grid-item">
-			<status :position="telemetry.hud.position" :laps="telemetry.hud.laps" :distance-traveled="telemetry.hud.distanceTraveled" :tyre-set="telemetry.hud.tyreSet"></status>
-		</div>
-		<div class="grid-item">
-		</div>
-		<div class="grid-item">
 			<h2>Next Pit Stop</h2>
 			<pitstop v-bind="telemetry.hud.pitstop"></pitstop>
 		</div>
+
+		<!-- grid row 2 -->
 		<div class="grid-item">
 			<inputs :electronics="telemetry.hud.electronics" :tc="telemetry.physics.tc" :abs="telemetry.physics.abs" :input="telemetry.physics.input"></inputs>
 		</div>
@@ -77,27 +81,42 @@
 }
 
 .header {
-	grid-area: header;
+	position: sticky;
+	top: 0;
+	left: 0;
+	background-color: var(--bg-primary);
+}
+
+.header h2 {
+	margin: 0;
+}
+
+.header > .row:first-child {
+	padding: 20px;
 }
 </style>
 <script>
 import Modal from "@/components/Modal.vue";
-import Laptimes from "@/components/Laptimes.vue";
 import Tyres from "@/components/Tyres.vue";
 import Status from "@/components/Status.vue";
 import Inputs from "@/components/Inputs.vue";
 import Pitstop from "@/components/Pitstop.vue";
-import Car from "@/components/Car.vue";
-import Misc from "@/components/Misc.vue";
 import Conditions from "@/components/Conditions.vue";
 import Motor from "@/components/Motor.vue";
-// import Flag from "@/components/Flag.vue";
+import SearchableSelect from "@/components/SearchableSelect.vue";
+import ClearableInput from "@/components/ClearableInput.vue";
+import TabRow from "@/components/TabRow.vue";
+import InGameClock from "@/components/InGameClock.vue";
+import CurrLaptime from "@/components/CurrLaptime.vue";
 
 function data() {
 	return {
+		currTab: 0,
 		connected: false,
+		channels: [],
 		channel: {
 			id: "",
+			name: "",
 			password: ""
 		},
 		telemetry: {
@@ -136,7 +155,7 @@ function data() {
 					rightIndicator: false
 				},
 				session: {
-					type: "Qualifying",
+					type: "<session type>",
 					timeLeft: 0,
 					activeCars: 0,
 					clock: 0
@@ -287,12 +306,12 @@ function data() {
 					nickname: ""
 				},
 				car: {
-					model: "nissan_gt_r_gt3_2018",
+					model: "",
 					maxRPM: 0,
 					tankCap: 0
 				},
 				track: {
-					name: "",
+					name: "<track>",
 					sectors: 0
 				},
 				pitWindow: {
@@ -325,6 +344,12 @@ let computed = {
 		m = (m % 60).toString().padStart(2, "0");
 
 		return `${h}:${m}:${s}`;
+	},
+	ledClass() {
+		return (this.connected ? "led-green" : "led-red");
+	},
+	ledTooltip() {
+		return (this.connected ? "Connected" : "Not connected");
 	}
 };
 
@@ -343,6 +368,17 @@ function disconnect() {
  */
 function delta(newTelemetry) {
 	recurse(this.telemetry, newTelemetry);
+}
+
+/**
+ * Channel object filter callback that determines whether or not the
+ * given channel object matches the provided search term.
+ * @param  {Object}  channel
+ * @param  {String}  term
+ * @return {Boolean}
+ */
+function filterChannel(channel, term) {
+	return channel.name.toLowerCase().includes(term);
 }
 
 /**
@@ -373,20 +409,22 @@ export default {
 	methods: {
 		connect,
 		disconnect,
-		delta
+		delta,
+		filterChannel
 	},
 	components: {
 		Modal,
-		Laptimes,
 		Tyres,
 		Status,
 		Inputs,
 		Pitstop,
-		Car,
-		Misc,
 		Conditions,
 		Motor,
-		// Flag
+		SearchableSelect,
+		ClearableInput,
+		TabRow,
+		InGameClock,
+		CurrLaptime,
 	}
 };
 </script>
