@@ -32,7 +32,7 @@
 				<curr-laptime :current="telemetry.hud.laptimes.current" :delta="telemetry.hud.laptimes.delta" :delta-positive="telemetry.hud.laptimes.isDeltaPositive" :valid="telemetry.hud.laptimes.isValidLap"></curr-laptime>
 			</div>
 		</div>
-		<tab-row v-model="currTab" :items="['Telemetry', 'Lap times']"></tab-row>
+		<tab-row v-model="currTab" :items="['Telemetry', 'Laps']"></tab-row>
 	</div>
 
 	<!-- telemetry tab -->
@@ -61,6 +61,34 @@
 			<tyres :brakes="telemetry.physics.brakes" :tyres="telemetry.physics.tyres"></tyres>
 		</div>
 	</div>
+
+	<!-- lap times tab -->
+	<div v-show="currTab === 1">
+		<div class="table-responsive">
+			<table class="table table-text-centre table-striped">
+				<thead>
+					<tr>
+						<th>Lap</th>
+						<th>Sector 1</th>
+						<th>Sector 2</th>
+						<th>Sector 3</th>
+						<th>Lap time</th>
+						<th>Delta</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="lt in laptimes" :key="lt.lapNo">
+						<td>{{ lt.lapNo }}</td>
+						<td>{{ lt.sectors[0] }}</td>
+						<td>{{ lt.sectors[1] }}</td>
+						<td>{{ lt.sectors[2] }}</td>
+						<td>{{ lt.total }}</td>
+						<td>{{ lt.delta(telemetry.hud.laptimes.best) }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 </template>
 <style>
@@ -70,7 +98,7 @@
 	display: grid;
 	grid-gap: 5px;
 	padding: 5px;
-	grid-template-areas: 'header header header';
+	grid-template-areas: "item item item";
 }
 
 .grid-item {
@@ -78,6 +106,7 @@
 	background-color: var(--fg-primary);
 	border-radius: 4px;
 	font-family: "Fira Mono", monospace;
+	grid-area: "item";
 }
 
 .header {
@@ -108,12 +137,68 @@ import ClearableInput from "@/components/ClearableInput.vue";
 import TabRow from "@/components/TabRow.vue";
 import InGameClock from "@/components/InGameClock.vue";
 import CurrLaptime from "@/components/CurrLaptime.vue";
+import fmtLaptime from "@/util/fmtLaptime";
 
+/**
+ * Laptime prototype.
+ */
+function Laptime(lapNo) {
+	let rawTotal = 0;
+	let complete = false;
+
+	// formatted total time (mm:ss.xxx)
+	// becomes a non-empty string once the lap is complete
+	this.total = "";
+
+	// array of sector times in seconds (ss.xxx)
+	this.sectors = [];
+
+	// the lap number of that this lap time was set
+	this.lapNo = lapNo;
+
+	/**
+	 * Add a sector time to the lap. Returns true when the lap is complete
+	 * and false otherwise.
+	 * @param  {Number}  time Sector time in milliseconds
+	 * @return {Boolean}
+	 */
+	this.addSector = function(time) {
+		rawTotal += time;
+		this.sectors.push(time / 1000);
+
+		// assumption: only 3 sectors per circuit. i.e. no nordschleife ;)
+		if (this.sectors.length === 3) {
+			// lap complete; format the total as a string
+			this.total = fmtLaptime(rawTotal, 3, 6);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get a delta time (in seconds). This should always return a positive number.
+	 * i.e. It is assumed that best will always be less than or equal to rawTotal.
+	 * @param  {Number} best Best lap time in milliseconds.
+	 * @return {Number}      Positive difference between best and rawTotal.
+	 */
+	this.delta = function(best) {
+		let diff = rawTotal - best;
+
+		return (diff / 1000);
+	}
+}
+
+/**
+ * Instance variables.
+ */
 function data() {
 	return {
 		currTab: 0,
 		connected: false,
 		channels: [],
+		laptimes: [],
 		channel: {
 			id: "",
 			name: "",
@@ -334,7 +419,13 @@ function data() {
 
 const TWELVE_HOURS = 12 * 3600;
 
+/**
+ * Computed instance variables.
+ */
 let computed = {
+	/**
+	 * Session time remaining in the form: hh:mm:ss.
+	 */
 	timeRemaining() {
 		let t = this.telemetry.hud.session.timeLeft;
 		let m = Math.floor(t / 60);
@@ -345,13 +436,30 @@ let computed = {
 
 		return `${h}:${m}:${s}`;
 	},
+
+	/**
+	 * LED colour based on the connection status.
+	 */
 	ledClass() {
 		return (this.connected ? "led-green" : "led-red");
 	},
+
+	/**
+	 * LED tooltip text based on the connection status.
+	 */
 	ledTooltip() {
 		return (this.connected ? "Connected" : "Not connected");
 	}
 };
+
+/**
+ * Created hook. Gets all channel objects from the API.
+ */
+function created() {
+	this.$ajax.get("channel")
+		.then(r => this.channels = r.data)
+		.catch(console.log);
+}
 
 function connect() {
 	//
@@ -402,10 +510,7 @@ function recurse(prev, next) {
 export default {
 	data,
 	computed,
-	methods: {
-		connect,
-		disconnect
-	},
+	created,
 	methods: {
 		connect,
 		disconnect,
