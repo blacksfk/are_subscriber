@@ -77,13 +77,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="lt in reversedLaptimes" :key="lt.lapNo">
-						<td>{{ lt.lapNo }}</td>
-						<td>{{ lt.sectors[0] }}</td>
-						<td>{{ lt.sectors[1] }}</td>
-						<td>{{ lt.sectors[2] }}</td>
-						<td>{{ lt.total }}</td>
-						<td>{{ lt.delta(telemetry.hud.laptimes.best) }}</td>
+					<tr v-for="lap in reversedLaps" :key="lap.lapNo">
+						<td>{{ lap.lapNo }}</td>
+						<td>{{ lap.sectors[0] }}</td>
+						<td>{{ lap.sectors[1] }}</td>
+						<td>{{ lap.sectors[2] }}</td>
+						<td>{{ lap.total }}</td>
+						<td>{{ lap.delta(telemetry.hud.laptimes.best) }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -140,9 +140,9 @@ import CurrLaptime from "@/components/CurrLaptime.vue";
 import fmtLaptime from "@/util/fmtLaptime";
 
 /**
- * Laptime prototype.
+ * Lap prototype.
  */
-function Laptime(lapNo) {
+function Lap(lapNo) {
 	let rawTotal = 0;
 	let complete = false;
 
@@ -221,10 +221,10 @@ function data() {
 		channels: [],
 
 		/**
-		 * Array of Laptime objects.
+		 * Array of Lap objects.
 		 * @type {Array}
 		 */
-		laptimes: [],
+		laps: [],
 
 		/**
 		 * The channel the user is currently connected to.
@@ -487,10 +487,10 @@ let computed = {
 	},
 
 	/**
-	 * Laptime objects in reverse order.
+	 * Lap objects in reverse order.
 	 */
-	reversedLaptimes() {
-		return this.laptimes.reverse();
+	reversedLaps() {
+		return this.laps.reverse();
 	}
 };
 
