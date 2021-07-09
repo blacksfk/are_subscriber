@@ -77,7 +77,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="lt in laptimes" :key="lt.lapNo">
+					<tr v-for="lt in reversedLaptimes" :key="lt.lapNo">
 						<td>{{ lt.lapNo }}</td>
 						<td>{{ lt.sectors[0] }}</td>
 						<td>{{ lt.sectors[1] }}</td>
@@ -195,15 +195,52 @@ function Laptime(lapNo) {
  */
 function data() {
 	return {
+		/**
+		 * Current tab index.
+		 * @type {Number}
+		 */
 		currTab: 0,
+
+		/**
+		 * Whether or not this client is connected to the server
+		 * via a websocket.
+		 * @type {Boolean}
+		 */
 		connected: false,
+
+		/**
+		 * Websocket connection.
+		 * @type {WebSocket}
+		 */
+		ws: undefined,
+
+		/**
+		 * Selectable channels. Loaded at run time from the API.
+		 * @type {Array}
+		 */
 		channels: [],
+
+		/**
+		 * Array of Laptime objects.
+		 * @type {Array}
+		 */
 		laptimes: [],
+
+		/**
+		 * The channel the user is currently connected to.
+		 * @type {Object}
+		 */
 		channel: {
 			id: "",
 			name: "",
 			password: ""
 		},
+
+		/**
+		 * Telemetry data as defined in the publisher client header files.
+		 * See: https://github.com/blacksfk/are_publisher
+		 * @type {Object}
+		 */
 		telemetry: {
 			hud: {
 				trackStatus: "",
@@ -417,8 +454,6 @@ function data() {
 	};
 }
 
-const TWELVE_HOURS = 12 * 3600;
-
 /**
  * Computed instance variables.
  */
@@ -449,6 +484,13 @@ let computed = {
 	 */
 	ledTooltip() {
 		return (this.connected ? "Connected" : "Not connected");
+	},
+
+	/**
+	 * Laptime objects in reverse order.
+	 */
+	reversedLaptimes() {
+		return this.laptimes.reverse();
 	}
 };
 
