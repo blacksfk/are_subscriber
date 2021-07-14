@@ -1,20 +1,5 @@
 <template>
 	<div>
-		<!-- TODO -->
-		<!-- <div class="tyre-visualiser">
-			<div class="row">
-				<div class="tyre"></div>
-				<div class="rotor"></div>
-				<div class="rotor"></div>
-				<div class="tyre"></div>
-			</div>
-			<div class="row">
-				<div class="tyre"></div>
-				<div class="rotor"></div>
-				<div class="rotor"></div>
-				<div class="tyre"></div>
-			</div>
-		</div> -->
 		<span>Brake bias: {{ brakes.bias }}</span>
 		<div class="table-responsive">
 			<table class="table">
@@ -36,7 +21,7 @@
 						<td>{{ tyres.pressure.rr }}</td>
 					</tr>
 					<tr>
-						<th>Tyre temperature</th>
+						<th>Tyre temperature (&deg;C)</th>
 						<td>{{ tyres.temp.fl }}</td>
 						<td>{{ tyres.temp.fr }}</td>
 						<td>{{ tyres.temp.rl }}</td>
@@ -44,38 +29,31 @@
 					</tr>
 					<tr>
 						<th>Brake pad compound</th>
-						<td>{{ brakes.compound.front }}</td>
-						<td>{{ brakes.compound.front }}</td>
-						<td>{{ brakes.compound.rear }}</td>
-						<td>{{ brakes.compound.rear }}</td>
+						<td>{{ brakes.compound.front + 1}}</td>
+						<td>{{ brakes.compound.front + 1}}</td>
+						<td>{{ brakes.compound.rear + 1}}</td>
+						<td>{{ brakes.compound.rear + 1}}</td>
 					</tr>
 					<tr>
-						<th>Brake pad wear</th>
-						<td>{{ brakes.padWear.fl }}</td>
-						<td>{{ brakes.padWear.fr }}</td>
-						<td>{{ brakes.padWear.rl }}</td>
-						<td>{{ brakes.padWear.rr }}</td>
+						<th>Brake pad depth (mm)</th>
+						<td>{{ brakes.padDepth.fl }}</td>
+						<td>{{ brakes.padDepth.fr }}</td>
+						<td>{{ brakes.padDepth.rl }}</td>
+						<td>{{ brakes.padDepth.rr }}</td>
 					</tr>
 					<tr>
-						<th>Brake disc wear</th>
-						<td>{{ brakes.discWear.fl }}</td>
-						<td>{{ brakes.discWear.fr }}</td>
-						<td>{{ brakes.discWear.rl }}</td>
-						<td>{{ brakes.discWear.rr }}</td>
+						<th>Brake rotor depth (mm)</th>
+						<td>{{ brakes.rotorDepth.fl }}</td>
+						<td>{{ brakes.rotorDepth.fr }}</td>
+						<td>{{ brakes.rotorDepth.rl }}</td>
+						<td>{{ brakes.rotorDepth.rr }}</td>
 					</tr>
 					<tr>
-						<th>Brake temperature</th>
+						<th>Brake temperature (&deg;C)</th>
 						<td>{{ brakes.temp.fl }}</td>
 						<td>{{ brakes.temp.fr }}</td>
 						<td>{{ brakes.temp.rl }}</td>
 						<td>{{ brakes.temp.rr }}</td>
-					</tr>
-					<tr>
-						<th>Brake pressure</th>
-						<td>{{ brakes.pressure.fl }}</td>
-						<td>{{ brakes.pressure.fr }}</td>
-						<td>{{ brakes.pressure.rl }}</td>
-						<td>{{ brakes.pressure.rr }}</td>
 					</tr>
 				</tbody>
 			</table>
