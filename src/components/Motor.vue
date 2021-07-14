@@ -8,7 +8,7 @@
 			</tr>
 			<tr>
 				<th>Gear</th>
-				<td>{{ gear }}</td>
+				<td>{{ strGear }}</td>
 			</tr>
 			<tr>
 				<th>RPM</th>
@@ -43,6 +43,15 @@
 </div>
 </template>
 <script>
+/**
+ * Current gear enumeration.
+ * @type {Array}
+ */
+const GEARS = ["R", "N", "1", "2", "3", "4", "5", "6", "7", "8"];
+
+/**
+ * Injected properties.
+ */
 let props = {
 	speed: Number,
 	gear: Number,
@@ -51,7 +60,26 @@ let props = {
 	motor: Object
 };
 
+/**
+ * Computed instance variables.
+ */
+let computed = {
+	/**
+	 * Returns the current gear index as a string. Current max gear is 8 (index = 9)
+	 * @return {String}
+	 */
+	strGear() {
+		if (this.gear < GEARS.length && this.gear > 0) {
+			return GEARS[this.gear];
+		}
+
+		// this should never happen right?
+		return "X";
+	}
+};
+
 export default {
-	props
+	props,
+	computed
 };
 </script>
