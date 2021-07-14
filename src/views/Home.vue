@@ -23,13 +23,13 @@
 				<div class="led led-sm" :class="ledClass" :title="ledTooltip"></div>
 			</div>
 			<div class="col-33 col-centre">
-				<h2><span>{{ telemetry.hud.session.type }}</span> &commat; <span>{{ telemetry.properties.track.name }}</span> | <in-game-clock :clock="telemetry.hud.session.clock"></in-game-clock></h2>
+				<h2><span>{{ telemetry.session.type }}</span> &commat; <span>{{ telemetry.track.name }}</span> | <in-game-clock :clock="telemetry.session.clock"></in-game-clock></h2>
 			</div>
 			<div class="col-33 col-end"><span>{{ timeRemaining }} remaining</span></div>
 		</div>
 		<div class="row">
 			<div class="col-33 col-centre">
-				<curr-laptime :current="telemetry.hud.laptimes.current" :delta="telemetry.hud.laptimes.delta" :delta-positive="telemetry.hud.laptimes.isDeltaPositive" :valid="telemetry.hud.laptimes.isValidLap"></curr-laptime>
+				<curr-laptime :current="telemetry.laptimes.curr" :delta="telemetry.laptimes.delta" :delta-positive="telemetry.laptimes.isDeltaPositive" :valid="telemetry.laptimes.isValidLap"></curr-laptime>
 			</div>
 		</div>
 		<tab-row v-model="currTab" :items="['Telemetry', 'Laps']"></tab-row>
@@ -40,25 +40,25 @@
 
 		<!-- grid row 1 -->
 		<div class="grid-item">
-			<status :position="telemetry.hud.position" :laps="telemetry.hud.laps" :distance-traveled="telemetry.hud.distanceTraveled" :tyre-set="telemetry.hud.tyreSet"></status>
+			<status :position="telemetry.position" :laps="telemetry.laps" :distance-traveled="telemetry.distanceTraveled" :tyre-set="telemetry.tyreSet" :fuel-used="telemetry.fuel.used" :fuel-remaining="telemetry.fuelRemaining" :fuel-rate="telemetry.fuel.rate"></status>
 		</div>
 		<div class="grid-item">
-			<conditions v-bind="telemetry.hud.conditions" :temp="telemetry.physics.temp"></conditions>
+			<conditions v-bind="telemetry.conditions" :temp="telemetry.temp"></conditions>
 		</div>
 		<div class="grid-item">
 			<h2>Next Pit Stop</h2>
-			<pitstop v-bind="telemetry.hud.pitstop"></pitstop>
+			<pitstop v-bind="telemetry.pitstop"></pitstop>
 		</div>
 
 		<!-- grid row 2 -->
 		<div class="grid-item">
-			<inputs :electronics="telemetry.hud.electronics" :tc="telemetry.physics.tc" :abs="telemetry.physics.abs" :input="telemetry.physics.input"></inputs>
+			<inputs :electronics="telemetry.electronics" :tc="telemetry.tc" :abs="telemetry.abs" :input="telemetry.input"></inputs>
 		</div>
 		<div class="grid-item">
-			<motor :motor="telemetry.physics.motor" :speed="telemetry.physics.speed" :gear="telemetry.physics.gear" :tc="telemetry.physics.tc" :abs="telemetry.physics.abs"></motor>
+			<motor :motor="telemetry.motor" :speed="telemetry.speed" :gear="telemetry.gear" :tc="telemetry.tcIntervention" :abs="telemetry.absIntervention"></motor>
 		</div>
 		<div class="grid-item">
-			<tyres :brakes="telemetry.physics.brakes" :tyres="telemetry.physics.tyres"></tyres>
+			<tyres :brakes="telemetry.brakes" :tyres="telemetry.tyres"></tyres>
 		</div>
 	</div>
 
@@ -83,7 +83,7 @@
 						<td>{{ lap.sectors[1] }}</td>
 						<td>{{ lap.sectors[2] }}</td>
 						<td>{{ lap.total }}</td>
-						<td>{{ lap.delta(telemetry.hud.laptimes.best) }}</td>
+						<td>{{ lap.delta(telemetry.laptimes.best) }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -237,218 +237,182 @@ function data() {
 		},
 
 		/**
-		 * Telemetry data as defined in the publisher client header files.
+		 * Telemetry data as defined in the publisher client.
 		 * See: https://github.com/blacksfk/are_publisher
 		 * @type {Object}
 		 */
 		telemetry: {
-			hud: {
-				trackStatus: "",
-				tyreCompound: "",
-				position: 0,
-				distanceTraveled: 0,
-				gameStatus: 0,
-				laps: 0,
-				tyreSet: 0,
-				isBoxed: false,
-				isInPitLane: false,
-				mandatoryPitDone: false,
-				rainTyres: false,
-				laptimes: {
-					current: 0,
-					last: 0,
-					best: 0,
-					delta: 0,
-					estimated: 0,
-					lastSplit: 0,
-					isDeltaPositive: false,
-					isValidLap: true
-				},
-				electronics: {
-					tc: 0,
-					tcCut: 0,
-					engineMap: 0,
-					abs: 0,
-					rainLight: 0,
-					flashingLights: 0,
-					lights: 0,
-					wiperLevel: 0,
-					leftIndicator: false,
-					rightIndicator: false
-				},
-				session: {
-					type: "<session type>",
-					timeLeft: 0,
-					activeCars: 0,
-					clock: 0
-				},
-				conditions: {
-					windSpeed: 0,
-					windDirection: 0,
-					track: "",
-					rain: {
-						current: "",
-						in10: "",
-						in30: ""
-					}
-				},
-				pitstop: {
-					tyreSet: 0,
-					strategyTyreSet: 0,
-					fuel: 0,
-					pressure: {
-						fl: 0,
-						fr: 0,
-						rl: 0,
-						rr: 0
-					}
-				},
-				penalty: {
-					type: 0,
-					duration: 0
-				},
-				drivingTime: {
-					totalRemaining: 0,
-					stintRemaining: 0
-				},
-				fuel: {
-					used: 0,
-					rate: 0
-				},
-				flag: {
-					current: 0,
-					green: false,
-					chequered: false,
-					red: false,
-					white: false,
-					yellow: {
-						global: false,
-						sector1: false,
-						sector2: false,
-						sector3: false
-					}
+			position: 0,
+			distanceTraveled: 0.0,
+			laps: 0,
+			tyreSet: 0,
+			isBoxed: false,
+			isInPitLane: false,
+			mandatoryPitDone: false,
+			rainTyres: false,
+			laptimes: {
+				curr: 0,
+				prev: 0,
+				best: 0,
+				estimated: 0,
+				delta: 0,
+				currSectorIndex: 0,
+				currSector: 0,
+				prevSector: 0,
+				isDeltaPositive: false,
+				isValidLap: false
+			},
+			electronics: {
+				tc: 0,
+				tcCut: 0,
+				engineMap: 0,
+				abs: 0,
+				headlightState: 0,
+				wiperState: 0,
+				rainLight: false,
+				flasher: false,
+				leftIndicator: false,
+				rightIndicator: false
+			},
+			session: {
+				type: "",
+				timeLeft: 0.0,
+				activeCars: 0,
+				clock: 0.0
+			},
+			conditions: {
+				windSpeed: 0.0,
+				windDirection: 0.0,
+				track: "",
+				rain: {
+					curr: "",
+					in10: "",
+					in30: ""
 				}
 			},
-			physics: {
-				speed: 0,
-				gear: 0,
-				tc: 0,
-				abs: 0,
-				input: {
-					accelerator: 0,
-					brake: 0,
-					clutch: 0,
-					steeringAngle: 0,
-					pitLimiter: false
-				},
-				brakes: {
-					bias: 0,
-					pressure: {
-						fl: 0,
-						fr: 0,
-						rl: 0,
-						rr: 0
-					},
-					compound: {
-						front: 0,
-						rear: 0
-					},
-					padWear: {
-						fl: 0,
-						fr: 0,
-						rl: 0,
-						rr: 0
-					},
-					discWear: {
-						fl: 0,
-						fr: 0,
-						rl: 0,
-						rr: 0
-					},
-					temp: {
-						fl: 0,
-						fr: 0,
-						rl: 0,
-						rr: 0
-					}
-				},
-				temp: {
-					ambient: 0,
-					track: 0
-				},
-				motor: {
-					waterTemp: 0,
-					rpm: 0,
-					boostPressure: 0,
-					running: false,
-					starter: false,
-					ignition: false
-				},
-				tyres: {
-					pressure: {
-						fl: 0,
-						fr: 0,
-						rl: 0,
-						rr: 0
-					},
-					temp: {
-						fl: 0,
-						fr: 0,
-						rl: 0,
-						rr: 0
-					}
-				},
-				angle: {
-					pitch: 0,
-					roll: 0,
-					yaw: 0
-				},
-				damage: {
+			pitstop: {
+				tyreSet: 0,
+				fuel: 0,
+				pressure: {
+					fl: 0.0,
+					fr: 0.0,
+					rl: 0.0,
+					rr: 0.0
+				}
+			},
+			penalty: {
+				type: 0,
+				duration: 0.0
+			},
+			drivingTime: {
+				totalRemaining: 0,
+				stintRemaining: 0
+			},
+			fuel: {
+				used: 0.0,
+				rate: 0.0
+			},
+			flag: {
+				curr: 0,
+				green: false,
+				chequered: false,
+				red: false,
+				white: false,
+				yellow: {
+					global: false,
+					sector1: false,
+					sector2: false,
+					sector3: false
+				}
+			},
+			speed: 0.0,
+			gear: 0,
+			tcIntervention: 0.0,
+			absIntervention: 0.0,
+			fuelRemaining: 0.0,
+			input: {
+				accelerator: 0.0,
+				brake: 0.0,
+				steering: 0.0,
+				pitLimiter: false
+			},
+			brakes: {
+				bias: 0.0,
+				compound: {
 					front: 0,
 					rear: 0,
-					left: 0,
-					right: 0,
-					centre: 0
 				},
-				suspensionTravel: {
-					fl: 0,
-					fr: 0,
-					rl: 0,
-					rr: 0
+				padDepth: {
+					fl: 0.0,
+					fr: 0.0,
+					rl: 0.0,
+					rr: 0.0
+				},
+				rotorDepth: {
+					fl: 0.0,
+					fr: 0.0,
+					rl: 0.0,
+					rr: 0.0
+				},
+				temp: {
+					fl: 0.0,
+					fr: 0.0,
+					rl: 0.0,
+					rr: 0.0
 				}
 			},
-			properties: {
-				sharedMemVer: "",
-				accVer: "",
-				dryTyre: "",
-				wetTyre: "",
-				player: {
-					firstname: "",
-					lastname: "",
-					nickname: ""
+			temp: {
+				ambient: 0.0,
+				track: 0.0
+			},
+			motor: {
+				rpm: 0,
+				boostPressure: 0.0,
+				running: false,
+				starter: false,
+				ignition: false
+			},
+			tyres: {
+				pressure: {
+					fl: 0.0,
+					fr: 0.0,
+					rl: 0.0,
+					rr: 0.0
 				},
-				car: {
-					model: "",
-					maxRPM: 0,
-					tankCap: 0
-				},
-				track: {
-					name: "<track>",
-					sectors: 0
-				},
-				pitWindow: {
-					start: 0,
-					end: 0
-				},
-				weekend: {
-					penaltiesEnabled: false,
-					tyreBlankets: 0,
-					fuelRate: 0,
-					tyreRate: 0,
-					damageRate: 0,
-					sessions: 0,
-					cars: 0
+				temp: {
+					fl: 0.0,
+					fr: 0.0,
+					rl: 0.0,
+					rr: 0.0
 				}
+			},
+			damage: {
+				front: 0.0,
+				rear: 0.0,
+				left: 0.0,
+				right: 0.0,
+				centre: 0.0
+			},
+			sessions: 0,
+			sharedMemVer: "",
+			accVer: "",
+			player: {
+				firstname: "",
+				surname: "",
+				nickname: ""
+			},
+			car: {
+				model: "",
+				maxRPM: 0,
+				tankCap: 0.0
+			},
+			track: {
+				name: "",
+				sectors: 0
+			},
+			pitWindow: {
+				start: 0,
+				end: 0
 			}
 		}
 	};
@@ -462,7 +426,7 @@ let computed = {
 	 * Session time remaining in the form: hh:mm:ss.
 	 */
 	timeRemaining() {
-		let t = this.telemetry.hud.session.timeLeft;
+		let t = this.telemetry.session.timeLeft;
 		let m = Math.floor(t / 60);
 		let h = Math.floor(m / 60).toString().padStart(2, "0");
 		let s = Math.floor(t % 60).toString().padStart(2, "0");
@@ -500,13 +464,17 @@ let computed = {
 function created() {
 	this.$ajax.get("channel")
 		.then(r => this.channels = r.data)
-		.catch(console.log);
+		.catch(console.error);
 }
 
 function connect() {
 	//
 }
 
+/**
+ * Disconnect from the current channel.
+ * @return {void}
+ */
 function disconnect() {
 	//
 }
