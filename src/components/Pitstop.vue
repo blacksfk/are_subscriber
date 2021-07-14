@@ -4,7 +4,7 @@
 		<tbody>
 			<tr>
 				<th>Tyre set</th>
-				<td>{{ tyreSet }}</td>
+				<td>{{ strTyreSet }}</td>
 			</tr>
 			<tr>
 				<th>Fuel fill</th>
@@ -31,13 +31,45 @@
 </div>
 </template>
 <script>
+import rainOrSlicks from "@/util/rainOrSlicks";
+
+/**
+ * Injected properties.
+ */
 let props = {
+	/**
+	 * The selected tyre set for the next pitstop
+	 */
 	tyreSet: Number,
+
+	/**
+	 * The amount of fuel to fill at the next pitstop.
+	 */
 	fuel: Number,
+
+	/**
+	 * Tyre pressures at the next pitstop. Should contain
+	 * keys: fl, fr, rl, rr.
+	 */
 	pressure: Object
 };
 
+/**
+ * Computed instance variables.
+ */
+let computed = {
+	/**
+	 * If `tyreSet` is zero "Rain tyres" is returned. Otherwise
+	 * the number indicates the dry tyre set.
+	 * @return {String|Number}
+	 */
+	strTyreSet() {
+		return rainOrSlicks(this.tyreSet);
+	}
+}
+
 export default {
-	props
+	props,
+	computed
 };
 </script>
