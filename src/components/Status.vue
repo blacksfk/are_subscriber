@@ -2,14 +2,26 @@
 <div>
 	<h2>{{ strPos }}</h2>
 	<h3><span>{{ laps }}</span> laps</h3>
-	<h3><span>{{ distanceTraveled }}</span>km</h3>
+	<h3><span>{{ dist }}</span>km</h3>
 	<h3>{{ status }}</h3>
 	<div class="table-responsive">
 		<table class="table">
 			<tbody>
 				<tr>
 					<th>Tyre set</th>
-					<td>{{ tyreSet }}</td>
+					<td>{{ strTyreSet }}</td>
+				</tr>
+				<tr>
+					<th>Fuel used</th>
+					<td>{{ fuelUsed }}L</td>
+				</tr>
+				<tr>
+					<th>Fuel remaining</th>
+					<td>{{ fuelRemaining }}L</td>
+				</tr>
+				<tr>
+					<th>Fuel rate</th>
+					<td>{{ fuelRate }}L/lap</td>
 				</tr>
 			</tbody>
 		</table>
@@ -17,6 +29,8 @@
 </div>
 </template>
 <script>
+import rainOrSlicks from "@/util/rainOrSlicks";
+
 /**
  * Injected properties.
  */
@@ -26,7 +40,10 @@ let props = {
 	distanceTraveled: Number,
 	tyreSet: Number,
 	isBoxed: Boolean,
-	isInPitLane: Boolean
+	isInPitLane: Boolean,
+	fuelUsed: Number,
+	fuelRemaining: Number,
+	fuelRate: Number
 };
 
 /**
@@ -66,6 +83,23 @@ let computed = {
 		}
 
 		return "RUNNING";
+	},
+
+	/**
+	 * If `tyreSet` is zero "Rain tyres" is returned. Otherwise
+	 * the number indicates the dry tyre set.
+	 * @return {String|Number}
+	 */
+	strTyreSet() {
+		return rainOrSlicks(this.tyreSet);
+	},
+
+	/**
+	 * Sesssion distance covered in kilometres (3 decimal places).
+	 * @return {String}
+	 */
+	dist() {
+		return (this.distanceTraveled / 1000).toFixed(3);
 	}
 };
 
