@@ -3,7 +3,7 @@
 	<!-- connection modal -->
 	<modal v-show="!connected" @close="connected = true">
 		<h3>Join a channel</h3>
-		<form action="connect" method="post">
+		<form action="connect" method="post" @submit.prevent="connect">
 			<div class="input-group">
 				<label for="id">Channel ID</label>
 				<searchable-select name="id" :options="channels" v-model="channel" display-key="name" placeholder="Channel ID" :filter="filterChannel"/>
@@ -181,12 +181,12 @@ function Lap(lapNo) {
 	 * Get a delta time (in seconds). This should always return a positive number.
 	 * i.e. It is assumed that best will always be less than or equal to rawTotal.
 	 * @param  {Number} best Best lap time in milliseconds.
-	 * @return {Number}      Positive difference between best and rawTotal.
+	 * @return {String}      Difference between best and rawTotal.
 	 */
 	this.delta = function(best) {
 		let diff = rawTotal - best;
 
-		return (diff / 1000);
+		return (diff / 1000).toFixed(3);
 	}
 }
 
@@ -225,6 +225,12 @@ function data() {
 		 * @type {Array}
 		 */
 		laps: [],
+
+		/**
+		 * The current lap that data is being received on.
+		 * @type {Lap}
+		 */
+		currLap: undefined,
 
 		/**
 		 * The channel the user is currently connected to.
@@ -467,8 +473,70 @@ function created() {
 		.catch(console.error);
 }
 
+/**
+ * Websocket status enumeration.
+ */
+const WS_STATUS = {
+	// challenges
+	WS_CHALLENGE_SUCCESS: 4000,
+	WS_CHALLENGE_PASSWORD: 4001,
+
+	// informational
+	WS_OK: 4200,
+
+	// errors
+	WS_ERROR_BAD_MSG: 4400,
+	WS_ERROR_UNAUTHORISED: 4401,
+	WS_ERROR_FORBIDDEN: 4402,
+	WS_ERROR_NOT_FOUND: 4403,
+	WS_ERROR_TIMEOUT: 4404,
+	WS_ERROR_CHANNEL_FULL: 4405
+};
+
+/**
+ * Application-defined websocket error code string enumerator.
+ * @param  {Number} e The code to enumerate.
+ * @return {String}   Description of the error code.
+ */
+function wsErrorToString(e) {
+	switch (e) {
+	case WS_STATUS.WS_ERROR_BAD_MSG:
+		return "Bad message";
+	case WS_STATUS.WS_ERROR_UNAUTHORISED:
+		return "Unauthorised";
+	case WS_STATUS.WS_ERROR_FORBIDDEN:
+		return "Forbidden";
+	case WS_STATUS.WS_ERROR_NOT_FOUND:
+		return "Not found";
+	case WS_STATUS.WS_ERROR_TIMEOUT:
+		return "Timed out";
+	case WS_STATUS.WS_ERROR_CHANNEL_FULL:
+		return "Channel is full. Please try again later.";
+	default:
+		return `Unknown error code: ${e}`;
+	}
+}
+
+/**
+ * Connect the requested channel.
+ * @return {void}
+ */
 function connect() {
-	//
+	if (this.connected) {
+		// ws is not undefined and therefore could still be connected
+		console.error("Still connected. Please disconnect first.");
+
+		return;
+	}
+
+	let url = `${process.env.VUE_APP_API_WS}/subscribe/${this.channel.id}`;
+
+	this.ws = new WebSocket(url);
+
+	// bind the vue instance context instead of the websocket's
+	this.ws.onclose = this.onClose.bind(this);
+	this.ws.onerror = this.onError.bind(this);
+	this.ws.onmessage = this.onMessage.bind(this);
 }
 
 /**
@@ -476,27 +544,93 @@ function connect() {
  * @return {void}
  */
 function disconnect() {
-	//
+	if (!this.connected) {
+		// websocket is not connected
+		return;
+	}
+
+	this.ws.close();
 }
 
 /**
- * Only update the keys and values in this.telemetry with the ones
- * recieved in newTelemetry.
- * @param  {Object} newTelemetry
+ * WebSocket onclose event handler.
+ * @param  {CloseEvent} event
+ * @return {void}
  */
-function delta(newTelemetry) {
-	recurse(this.telemetry, newTelemetry);
+function onClose(event) {
+	this.ws = undefined;
+	this.connected = false;
 }
 
 /**
- * Channel object filter callback that determines whether or not the
- * given channel object matches the provided search term.
- * @param  {Object}  channel
- * @param  {String}  term
- * @return {Boolean}
+ * WebSocket onerror event handler.
+ * @param  {error} e
+ * @return {void}
  */
-function filterChannel(channel, term) {
-	return channel.name.toLowerCase().includes(term.toLowerCase());
+function onError(e) {
+	console.error("WebSocket error");
+	console.error(e);
+}
+
+/**
+ * WebSocket onmessage event handler.
+ * @param  {MessageEvent} event
+ * @return {void}
+ */
+function onMessage(event) {
+	// parse the received data as JSON
+	let msg = JSON.parse(event.data);
+
+	switch (msg.status) {
+	case WS_STATUS.WS_CHALLENGE_SUCCESS:
+		// challenge succeeded; mark as connected
+		this.connected = true;
+		break;
+	case WS_STATUS.WS_CHALLENGE_PASSWORD:
+		// send the password to the server
+		this.ws.send(this.channel.password);
+		break;
+	case WS_STATUS.WS_OK:
+		// data or an all good message was received
+		if (!msg.data) {
+			break;
+		}
+
+		this.newTelemetryData(msg.data);
+		break;
+	default:
+		// either an error occurred or an unsupported status was received
+		console.error(msg.status, wsErrorToString(msg.status));
+	}
+}
+
+/**
+ * Firstly, start a new lap or add the previous sector time to the
+ * current lap, then overwrite the old data with the new.
+ * @param  {Object} data Expected to be a delta object matching the telemetry.
+ * @return {void}
+ */
+function newTelemetryData(data) {
+	if (!this.currLap) {
+		// new lap started
+		this.currLap = new Lap(this.laps + 1);
+	}
+
+	if (data.laptimes &&
+		data.laptimes.currSectorIndex != this.telemetry.laptimes.currSectorIndex
+	) {
+		// new sector started; add the old sector time to the lap
+		let done = this.currLap.addSector(data.laptimes.prevSector);
+
+		if (done) {
+			// lap completed
+			this.laps.push(this.currLap);
+			this.currLap = undefined;
+		}
+	}
+
+	// overwrite the old data with the new
+	recurse(this.telemetry, data);
 }
 
 /**
@@ -528,7 +662,6 @@ function filterChannel(channel, term) {
 	return channel.name.toLowerCase().includes(term.toLowerCase());
 }
 
-
 export default {
 	data,
 	computed,
@@ -536,7 +669,10 @@ export default {
 	methods: {
 		connect,
 		disconnect,
-		delta,
+		onClose,
+		onError,
+		onMessage,
+		newTelemetryData,
 		filterChannel
 	},
 	components: {
