@@ -20,7 +20,7 @@
 	<div class="header">
 		<div class="row space-between">
 			<div class="col-33 col-start">
-				<div class="led led-sm" :class="ledClass" :title="ledTooltip"></div>
+				<span class="led led-sm" :class="ledClass" :title="ledTooltip"></span>&nbsp;<span v-show="connected">Connected to: {{ channel.name }}</span>
 			</div>
 			<div class="col-33 col-centre">
 				<h2><span>{{ telemetry.session.type }}</span> &commat; <span>{{ telemetry.track.name }}</span> | <in-game-clock :clock="telemetry.session.clock"></in-game-clock></h2>
@@ -516,6 +516,18 @@ function recurse(prev, next) {
 		}
 	}
 }
+
+/**
+ * Channel object filter callback that determines whether or not the
+ * given channel object matches the provided search term.
+ * @param  {Object}  channel
+ * @param  {String}  term
+ * @return {Boolean}
+ */
+function filterChannel(channel, term) {
+	return channel.name.toLowerCase().includes(term.toLowerCase());
+}
+
 
 export default {
 	data,
