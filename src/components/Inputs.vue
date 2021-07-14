@@ -6,9 +6,6 @@
 		<div class="inputs-pedal-container">
 			<div class="inputs-pedal inputs-brake" :style="brake"></div>
 		</div>
-		<div class="inputs-pedal-container">
-			<div class="inputs-pedal inputs-clutch" :style="clutch"></div>
-		</div>
 		<div class="table-responsive">
 			<table class="table">
 				<tbody>
@@ -29,7 +26,7 @@
 						<td>{{ electronics.engineMap }}</td>
 					</tr>
 					<tr>
-						<th>Rain light</th>
+						<th>Rain light on</th>
 						<td>{{ electronics.rainLight }}</td>
 					</tr>
 					<tr>
@@ -61,10 +58,6 @@
 
 .inputs-brake {
 	background-color: #df1212;
-}
-
-.inputs-clutch {
-	background-color: #276ce5;
 }
 </style>
 <script>
