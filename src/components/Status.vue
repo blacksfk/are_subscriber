@@ -38,21 +38,17 @@ let computed = {
 	 * @return {String}
 	 */
 	strPos() {
-		let suffix;
+		let suffix = "";
+		let rem = this.position % 10;
 
-		// divide by 10 and get the remainder
-		switch (this.position % 10) {
-			case 1:
-				suffix = "st";
-				break;
-			case 2:
-				suffix = "nd";
-				break;
-			case 3:
-				suffix = "rd";
-				break;
-			default:
-				suffix = "th";
+		if (rem == 1 && this.position !== 11) {
+			suffix = "st";
+		} else if (rem == 2 && this.position !== 12) {
+			suffix = "nd";
+		} else if (rem == 3 && this.position !== 13) {
+			suffix = "rd";
+		} else {
+			suffix = "th";
 		}
 
 		return `${this.position}${suffix}`;
