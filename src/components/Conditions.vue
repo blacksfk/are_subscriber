@@ -9,11 +9,11 @@
 			<tbody>
 				<tr>
 					<th>Ambient</th>
-					<td>{{ temp.ambient }}&#8451;</td>
+					<td>{{ temp.ambient.toFixed(1) }}&#8451;</td>
 				</tr>
 				<tr>
 					<th>Track</th>
-					<td>{{ temp.track }}&#8451;</td>
+					<td>{{ temp.track.toFixed(1) }}&#8451;</td>
 				</tr>
 				<tr>
 					<th>Track status</th>
@@ -21,7 +21,7 @@
 				</tr>
 				<tr>
 					<th>Rain Intensity now</th>
-					<td>{{ rain.current }}</td>
+					<td>{{ rain.curr }}</td>
 				</tr>
 				<tr>
 					<th>Rain Intensity in 10 minutes</th>
