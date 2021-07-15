@@ -61,7 +61,7 @@ function data() {
 
 let computed = {
 	paddedDelta() {
-		let symbol = (this.deltaPositive ? "+" : "-");
+		let symbol = (this.deltaPositive ? "+" : "");
 
 		return `${symbol}${(this.delta / 1000).toFixed(NON_TIMER_PLACES)}`;
 	},
