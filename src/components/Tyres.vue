@@ -29,10 +29,10 @@
 					</tr>
 					<tr>
 						<th>Brake pad compound</th>
-						<td>{{ brakes.compound.front + 1}}</td>
-						<td>{{ brakes.compound.front + 1}}</td>
-						<td>{{ brakes.compound.rear + 1}}</td>
-						<td>{{ brakes.compound.rear + 1}}</td>
+						<td>{{ brakes.compound.front }}</td>
+						<td>{{ brakes.compound.front }}</td>
+						<td>{{ brakes.compound.rear }}</td>
+						<td>{{ brakes.compound.rear }}</td>
 					</tr>
 					<tr>
 						<th>Brake pad depth (mm)</th>
