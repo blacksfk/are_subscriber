@@ -1,11 +1,11 @@
 <template>
 	<div>
-		<div class="inputs-pedal-container">
+		<!-- <div class="inputs-pedal-container">
 			<div class="inputs-pedal inputs-accelerator" :style="accelerator"></div>
 		</div>
 		<div class="inputs-pedal-container">
 			<div class="inputs-pedal inputs-brake" :style="brake"></div>
-		</div>
+		</div> -->
 		<div class="table-responsive">
 			<table class="table">
 				<tbody>
