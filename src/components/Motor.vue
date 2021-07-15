@@ -69,7 +69,7 @@ let computed = {
 	 * @return {String}
 	 */
 	strGear() {
-		if (this.gear < GEARS.length && this.gear > 0) {
+		if (this.gear < GEARS.length && this.gear >= 0) {
 			return GEARS[this.gear];
 		}
 
