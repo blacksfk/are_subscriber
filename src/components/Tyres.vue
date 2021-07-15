@@ -15,17 +15,17 @@
 				<tbody>
 					<tr>
 						<th>Tyre pressure (psi)</th>
-						<td>{{ tyres.pressure.fl }}</td>
-						<td>{{ tyres.pressure.fr }}</td>
-						<td>{{ tyres.pressure.rl }}</td>
-						<td>{{ tyres.pressure.rr }}</td>
+						<td>{{ tyres.pressure.fl.toFixed(2) }}</td>
+						<td>{{ tyres.pressure.fr.toFixed(2) }}</td>
+						<td>{{ tyres.pressure.rl.toFixed(2) }}</td>
+						<td>{{ tyres.pressure.rr.toFixed(2) }}</td>
 					</tr>
 					<tr>
 						<th>Tyre temperature (&deg;C)</th>
-						<td>{{ tyres.temp.fl }}</td>
-						<td>{{ tyres.temp.fr }}</td>
-						<td>{{ tyres.temp.rl }}</td>
-						<td>{{ tyres.temp.rr }}</td>
+						<td>{{ tyres.temp.fl.toFixed(2) }}</td>
+						<td>{{ tyres.temp.fr.toFixed(2) }}</td>
+						<td>{{ tyres.temp.rl.toFixed(2) }}</td>
+						<td>{{ tyres.temp.rr.toFixed(2) }}</td>
 					</tr>
 					<tr>
 						<th>Brake pad compound</th>
@@ -36,24 +36,24 @@
 					</tr>
 					<tr>
 						<th>Brake pad depth (mm)</th>
-						<td>{{ brakes.padDepth.fl }}</td>
-						<td>{{ brakes.padDepth.fr }}</td>
-						<td>{{ brakes.padDepth.rl }}</td>
-						<td>{{ brakes.padDepth.rr }}</td>
+						<td>{{ brakes.padDepth.fl.toFixed(2) }}</td>
+						<td>{{ brakes.padDepth.fr.toFixed(2) }}</td>
+						<td>{{ brakes.padDepth.rl.toFixed(2) }}</td>
+						<td>{{ brakes.padDepth.rr.toFixed(2) }}</td>
 					</tr>
 					<tr>
 						<th>Brake rotor depth (mm)</th>
-						<td>{{ brakes.rotorDepth.fl }}</td>
-						<td>{{ brakes.rotorDepth.fr }}</td>
-						<td>{{ brakes.rotorDepth.rl }}</td>
-						<td>{{ brakes.rotorDepth.rr }}</td>
+						<td>{{ brakes.rotorDepth.fl.toFixed(2) }}</td>
+						<td>{{ brakes.rotorDepth.fr.toFixed(2) }}</td>
+						<td>{{ brakes.rotorDepth.rl.toFixed(2) }}</td>
+						<td>{{ brakes.rotorDepth.rr.toFixed(2) }}</td>
 					</tr>
 					<tr>
 						<th>Brake temperature (&deg;C)</th>
-						<td>{{ brakes.temp.fl }}</td>
-						<td>{{ brakes.temp.fr }}</td>
-						<td>{{ brakes.temp.rl }}</td>
-						<td>{{ brakes.temp.rr }}</td>
+						<td>{{ brakes.temp.fl.toFixed(2) }}</td>
+						<td>{{ brakes.temp.fr.toFixed(2) }}</td>
+						<td>{{ brakes.temp.rl.toFixed(2) }}</td>
+						<td>{{ brakes.temp.rr.toFixed(2) }}</td>
 					</tr>
 				</tbody>
 			</table>
