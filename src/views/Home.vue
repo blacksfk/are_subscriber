@@ -432,7 +432,7 @@ let computed = {
 	 * Session time remaining in the form: hh:mm:ss.
 	 */
 	timeRemaining() {
-		let t = this.telemetry.session.timeLeft;
+		let t = this.telemetry.session.timeLeft / 1000;
 		let m = Math.floor(t / 60);
 		let h = Math.floor(m / 60).toString().padStart(2, "0");
 		let s = Math.floor(t % 60).toString().padStart(2, "0");
