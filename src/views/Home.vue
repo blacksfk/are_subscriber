@@ -265,7 +265,6 @@ function data() {
 				delta: 0,
 				currSectorIndex: 0,
 				currSector: 0,
-				prevSector: 0,
 				isDeltaPositive: false,
 				isValidLap: false
 			},
