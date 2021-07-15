@@ -114,6 +114,7 @@
 	top: 0;
 	left: 0;
 	background-color: var(--bg-primary);
+	z-index: 10;
 }
 
 .header h2 {
