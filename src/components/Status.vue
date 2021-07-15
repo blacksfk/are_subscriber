@@ -1,7 +1,7 @@
 <template>
 <div>
 	<h2>{{ strPos }}</h2>
-	<h3><span>{{ laps }}</span> laps</h3>
+	<h3><span>{{ laps }}</span> {{ lapSuffix }}</h3>
 	<h3><span>{{ dist }}</span>km</h3>
 	<h3>{{ status }}</h3>
 	<div class="table-responsive">
@@ -13,15 +13,15 @@
 				</tr>
 				<tr>
 					<th>Fuel used</th>
-					<td>{{ fuelUsed }}L</td>
+					<td>{{ fuelUsed.toFixed(2) }}L</td>
 				</tr>
 				<tr>
 					<th>Fuel remaining</th>
-					<td>{{ fuelRemaining }}L</td>
+					<td>{{ fuelRemaining.toFixed(2) }}L</td>
 				</tr>
 				<tr>
 					<th>Fuel rate</th>
-					<td>{{ fuelRate }}L/lap</td>
+					<td>{{ fuelRate.toFixed(2) }}L/lap</td>
 				</tr>
 			</tbody>
 		</table>
@@ -100,6 +100,18 @@ let computed = {
 	 */
 	dist() {
 		return (this.distanceTraveled / 1000).toFixed(3);
+	},
+
+	/**
+	 * Returns "lap" if only one lap completed and "laps" otherwise.
+	 * @return {String}
+	 */
+	lapSuffix() {
+		if (this.laps !== 1) {
+			return "laps";
+		}
+
+		return "lap";
 	}
 };
 
