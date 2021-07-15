@@ -4,7 +4,7 @@
 		<tbody>
 			<tr>
 				<th>Speed</th>
-				<td>{{ speed }}km/h</td>
+				<td>{{ speed.toFixed(1) }}km/h</td>
 			</tr>
 			<tr>
 				<th>Gear</th>
