@@ -23,16 +23,17 @@
 				<span class="led led-sm" :class="ledClass" :title="ledTooltip"></span>&nbsp;<span v-show="connected">Connected to: {{ channel.name }}</span>
 			</div>
 			<div class="col-33 col-centre">
-				<h2><span>{{ telemetry.session.type }}</span> &commat; <span>{{ telemetry.track.name }}</span> | <in-game-clock :clock="telemetry.session.clock"></in-game-clock></h2>
+				<h2><span>{{ telemetry.session.type }}</span> &commat; <span>{{ telemetry.track.name }}</span> | <in-game-clock :clock="telemetry.session.clock"/></h2>
 			</div>
 			<div class="col-33 col-end"><span>{{ timeRemaining }} remaining</span></div>
 		</div>
 		<div class="row">
 			<div class="col-33 col-centre">
-				<curr-laptime :current="telemetry.laptimes.curr" :delta="telemetry.laptimes.delta" :delta-positive="telemetry.laptimes.isDeltaPositive" :valid="telemetry.laptimes.isValidLap"></curr-laptime>
+				<curr-laptime :current="telemetry.laptimes.curr" :delta="telemetry.laptimes.delta" :delta-positive="telemetry.laptimes.isDeltaPositive" :valid="telemetry.laptimes.isValidLap"/>
 			</div>
 		</div>
-		<tab-row v-model="currTab" :items="['Telemetry', 'Laps']"></tab-row>
+		<!-- <tab-row v-model="currTab" :items="['Telemetry', 'Laps']"/> -->
+		<tab-row v-model="currTab" :items="['Telemetry']"/>
 	</div>
 
 	<!-- telemetry tab -->
@@ -62,8 +63,8 @@
 		</div>
 	</div>
 
-	<!-- lap times tab -->
-	<div v-show="currTab === 1">
+	<!-- lap times tab TODO: fix bugs -->
+	<!-- <div v-show="currTab === 1">
 		<div class="table-responsive">
 			<table class="table table-text-centre table-striped">
 				<thead>
@@ -88,7 +89,7 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</div> -->
 </div>
 </template>
 <style>
@@ -144,50 +145,51 @@ import fmtLaptime from "@/util/fmtLaptime";
  * Lap prototype.
  */
 function Lap(lapNo) {
-	let rawTotal = 0;
-	let complete = false;
+	let rawTotal = -1;
 
-	// formatted total time (mm:ss.xxx)
-	// becomes a non-empty string once the lap is complete
+	this.lapNo = lapNo;
+	this.sectors = [0, 0, 0];
 	this.total = "";
 
-	// array of sector times in seconds (ss.xxx)
-	this.sectors = [];
-
-	// the lap number of that this lap time was set
-	this.lapNo = lapNo;
-
 	/**
-	 * Add a sector time to the lap. Returns true when the lap is complete
-	 * and false otherwise.
-	 * @param  {Number}  time Sector time in milliseconds
-	 * @return {Boolean}
+	 * Set an on-going sector time to this lap.
+	 * @param {Number} idx  The sector index.
+	 * @param {Number} time In milliseconds.
 	 */
-	this.addSector = function(time) {
-		rawTotal += time;
-		this.sectors.push(time / 1000);
-
-		// assumption: only 3 sectors per circuit. i.e. no nordschleife ;)
-		if (this.sectors.length === 3) {
-			// lap complete; format the total as a string
-			this.total = fmtLaptime(rawTotal, 3, 6);
-
-			return true;
-		}
-
-		return false;
+	this.setSector = function(idx, time) {
+		this.sectors[idx] = time;
 	}
 
 	/**
-	 * Get a delta time (in seconds). This should always return a positive number.
-	 * i.e. It is assumed that best will always be less than or equal to rawTotal.
-	 * @param  {Number} best Best lap time in milliseconds.
-	 * @return {String}      Difference between best and rawTotal.
+	 * Mark this lap as complete by using the telemetry
+	 * data as the source of truth.
+	 * @param  {Number} time In milliseconds.
+	 * @return {void}
+	 */
+	this.complete = function(time) {
+		rawTotal = time;
+		this.total = fmtLaptime(time, 3, 6);
+	}
+
+	/**
+	 * Get a delta from the best lap time in seconds. Returns
+	 * an empty string until the lap is marked as complete. It
+	 * is assumed that this lap will only ever be the same or slower
+	 * than the provided best.
+	 * @param  {Number} best In milliseconds.
+	 * @return {String}      "+w.xyz"
 	 */
 	this.delta = function(best) {
+		if (rawTotal < 0) {
+			// lap not complete
+			return "";
+		}
+
+		// assumumption: this laptime is always the same or
+		// worse as the provided best lap
 		let diff = rawTotal - best;
 
-		return (diff / 1000).toFixed(3);
+		return `+${(diff / 1000).toFixed(3)}`;
 	}
 }
 
@@ -465,9 +467,15 @@ let computed = {
 };
 
 /**
- * Created hook. Gets all channel objects from the API.
+ * Created hook. Initialises the first lap and ets all
+ * channel objects from the API.
  */
 function created() {
+	// start a new lap
+	// this.currLap = new Lap(1);
+	// this.laps.push(this.currLap);
+
+	// get all channels
 	this.$ajax.get("channel")
 		.then(r => this.channels = r.data)
 		.catch(console.error);
@@ -611,23 +619,31 @@ function onMessage(event) {
  * @return {void}
  */
 function newTelemetryData(data) {
-	if (!this.currLap) {
-		// new lap started
-		this.currLap = new Lap(this.laps + 1);
-	}
+	// console.log(data.laptimes);
 
-	if (data.laptimes &&
-		data.laptimes.currSectorIndex != this.telemetry.laptimes.currSectorIndex
-	) {
-		// new sector started; add the old sector time to the lap
-		let done = this.currLap.addSector(data.laptimes.prevSector);
+	// if (data.laptimes.prevSector) {
+	// 	// if the current sector index is 0, then a new lap was started
+	// 	// so the prevSector should "underflow"
+	// 	let idx = (data.laptimes.currSectorIndex === 0 ? 2 : data.laptimes.currSectorIndex - 1);
 
-		if (done) {
-			// lap completed
-			this.laps.push(this.currLap);
-			this.currLap = undefined;
-		}
-	}
+	// 	this.currLap.setSector(idx, data.laptimes.prevSector);
+	// }
+
+	// if (data.laptimes.prev) {
+	// 	// lap complete
+	// 	this.currLap.complete(data.laptimes.prev);
+
+	// 	// start a new lap
+	// 	this.currLap = new Lap(data.laps + 1);
+	// 	this.laps.push(this.currLap);
+	// }
+
+	// if (data.laptimes.currSector) {
+	// 	this.currLap.setSector(
+	// 		data.laptimes.currSectorIndex || this.telemetry.laptimes.currSectorIndex,
+	// 		data.laptimes.currSector
+	// 	);
+	// }
 
 	// overwrite the old data with the new
 	recurse(this.telemetry, data);
