@@ -1,7 +1,7 @@
 <template>
 <div>
 	<!-- connection modal -->
-	<modal v-show="!connected" @close="connected = true">
+	<modal v-show="!connected">
 		<h3>Join a channel</h3>
 		<form action="connect" method="post" @submit.prevent="connect">
 			<div class="input-group">
