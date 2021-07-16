@@ -40,29 +40,29 @@
 	</div>
 
 	<!-- telemetry tab -->
-	<div class="grid-container" v-show="currTab === 0">
-
-		<!-- grid row 1 -->
-		<div class="grid-item">
-			<status :position="telemetry.position" :laps="telemetry.laps" :distance-traveled="telemetry.distanceTraveled" :tyre-set="telemetry.tyreSet" :fuel-used="telemetry.fuel.used" :fuel-remaining="telemetry.fuelRemaining" :fuel-rate="telemetry.fuel.rate"></status>
+	<div class="telemetry-row-container" v-show="currTab === 0">
+		<div class="row">
+			<div class="telemetry-row-container-item">
+				<status :position="telemetry.position" :laps="telemetry.laps" :distance-traveled="telemetry.distanceTraveled" :tyre-set="telemetry.tyreSet" :fuel-used="telemetry.fuel.used" :fuel-remaining="telemetry.fuelRemaining" :fuel-rate="telemetry.fuel.rate"/>
+			</div>
+			<div class="telemetry-row-container-item">
+				<conditions v-bind="telemetry.conditions" :temp="telemetry.temp"/>
+			</div>
+			<div class="telemetry-row-container-item">
+				<h2>Next Pit Stop</h2>
+				<pitstop v-bind="telemetry.pitstop"></pitstop>
+			</div>
 		</div>
-		<div class="grid-item">
-			<conditions v-bind="telemetry.conditions" :temp="telemetry.temp"></conditions>
-		</div>
-		<div class="grid-item">
-			<h2>Next Pit Stop</h2>
-			<pitstop v-bind="telemetry.pitstop"></pitstop>
-		</div>
-
-		<!-- grid row 2 -->
-		<div class="grid-item">
-			<inputs :electronics="telemetry.electronics" :tc="telemetry.tc" :abs="telemetry.abs" :input="telemetry.input"></inputs>
-		</div>
-		<div class="grid-item">
-			<motor :motor="telemetry.motor" :speed="telemetry.speed" :gear="telemetry.gear" :tc="telemetry.tcIntervention" :abs="telemetry.absIntervention"></motor>
-		</div>
-		<div class="grid-item">
-			<tyres :brakes="telemetry.brakes" :tyres="telemetry.tyres"></tyres>
+		<div class="row">
+			<div class="telemetry-row-container-item">
+				<inputs :electronics="telemetry.electronics" :tc="telemetry.tc" :abs="telemetry.abs" :input="telemetry.input"/>
+			</div>
+			<div class="telemetry-row-container-item">
+				<motor :motor="telemetry.motor" :speed="telemetry.speed" :gear="telemetry.gear" :tc="telemetry.tcIntervention" :abs="telemetry.absIntervention"/>
+			</div>
+			<div class="telemetry-row-container-item">
+				<tyres :brakes="telemetry.brakes" :tyres="telemetry.tyres"/>
+			</div>
 		</div>
 	</div>
 
@@ -98,21 +98,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
 
-.grid-container {
-	display: grid;
-	grid-gap: 5px;
-	padding: 5px;
-	grid-template-areas: "item item item";
-}
-
-.grid-item {
-	padding: 15px;
-	background-color: var(--fg-primary);
-	border-radius: 4px;
-	font-family: "Fira Mono", monospace;
-	grid-area: "item";
-}
-
 .header {
 	position: sticky;
 	top: 0;
@@ -127,6 +112,33 @@
 
 .header > .row {
 	padding: 2px 5px;
+}
+
+.telemetry-row-container {
+	padding: 5px;
+}
+
+.telemetry-row-container-item {
+	box-sizing: border-box;
+	max-width: 100%;
+	padding: 10px;
+	background-color: var(--fg-primary);
+	border-radius: 4px;
+	font-family: "Fira Mono", monospace;
+	margin: 2px;
+	flex: 1 0 0;
+}
+
+@media only screen and (min-width: 1px) {
+	.telemetry-row-container > .row {
+		flex-direction: column;
+	}
+}
+
+@media only screen and (min-width: 600px) {
+	.telemetry-row-container > .row {
+		flex-direction: row;
+	}
 }
 </style>
 <script>
