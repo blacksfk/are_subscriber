@@ -126,7 +126,7 @@
 }
 
 .header > .row {
-	margin: 10px;
+	padding: 2px 5px;
 }
 </style>
 <script>
