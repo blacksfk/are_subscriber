@@ -23,12 +23,12 @@
 
 .modal-content {
 	position: relative; /* enables positioning of the close button */
-	width: 40%;
 	padding: 20px 10px 10px 10px;
 	margin: 50px auto auto auto;
 	border: 1px solid var(--primary);
 	border-radius: 4px;
 	background-color: var(--bg-primary);
+	box-sizing: border-box;
 }
 
 .modal-close {
@@ -38,10 +38,29 @@
 	border: 0;
 	color: var(--primary);
 	background-color: transparent;
+	font-size: 200%;
 }
 
 .modal-close:hover {
 	color: var(--primary);
+}
+
+@media only screen and (min-width: 1px) {
+	.modal-content {
+		width: 100%;
+	}
+}
+
+@media only screen and (min-width: 600px) {
+	.modal-content {
+		width: 80%;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	.modal-content {
+		width: 40%;
+	}
 }
 </style>
 <script>
