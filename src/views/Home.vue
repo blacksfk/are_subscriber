@@ -28,6 +28,9 @@
 			<div class="col-33 col-end"><span>{{ timeRemaining }} remaining</span></div>
 		</div>
 		<div class="row">
+			<div class="col-33 col-centre"><span>{{ playerName }}</span> | <span>{{ telemetry.car.model }}</span></div>
+		</div>
+		<div class="row">
 			<div class="col-33 col-centre">
 				<curr-laptime :current="telemetry.laptimes.curr" :delta="telemetry.laptimes.delta" :delta-positive="telemetry.laptimes.isDeltaPositive" :valid="telemetry.laptimes.isValidLap"/>
 			</div>
@@ -122,8 +125,8 @@
 	margin: 0;
 }
 
-.header > .row:first-child {
-	padding: 20px;
+.header > .row {
+	margin: 10px;
 }
 </style>
 <script>
@@ -463,6 +466,14 @@ let computed = {
 	 */
 	reversedLaps() {
 		return this.laps.reverse();
+	},
+
+	/**
+	 * Full player name.
+	 */
+	playerName() {
+		return this.telemetry.player.firstname + " " +
+			this.telemetry.player.surname;
 	}
 };
 
