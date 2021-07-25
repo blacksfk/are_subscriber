@@ -10,7 +10,6 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 # copy source files
-# install vue globally
 # compile into static HTML/CSS/JS
 # will use the .env.production.local for variable definition if present
 COPY . .
