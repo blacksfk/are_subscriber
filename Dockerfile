@@ -4,6 +4,16 @@ FROM node:alpine3.14 AS builder
 # change working directory
 WORKDIR /app/
 
+ARG BASE_URL
+ARG VUE_APP_API_URL
+ARG VUE_APP_WS_URL
+ARG VUE_APP_API_TIMEOUT
+
+ENV BASE_URL=${BASE_URL}
+ENV VUE_APP_API_URL=${VUE_APP_API_URL}
+ENV VUE_APP_WS_URL=${VUE_APP_WS_URL}
+ENV VUE_APP_API_TIMEOUT=${VUE_APP_API_TIMEOUT}
+
 # copy package.json and download depedencies
 # don't specify --production to install vue-cli-service from dev dependencies
 COPY package.json package-lock.json ./
