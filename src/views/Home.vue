@@ -69,7 +69,7 @@
 	<!-- lap times tab TODO: fix bugs -->
 	<!-- <div v-show="currTab === 1">
 		<div class="table-responsive">
-			<table class="table table-text-centre table-striped">
+			<table class="table table-td-centre table-striped">
 				<thead>
 					<tr>
 						<th>Lap</th>

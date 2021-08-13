@@ -2,7 +2,7 @@
 	<div>
 		<span>Brake bias: {{ brakes.bias }}</span>
 		<div class="table-responsive">
-			<table class="table">
+			<table class="table table-td-right">
 				<thead>
 					<tr>
 						<th></th>

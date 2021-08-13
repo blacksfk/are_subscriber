@@ -7,7 +7,7 @@
 			<div class="inputs-pedal inputs-brake" :style="brake"></div>
 		</div> -->
 		<div class="table-responsive">
-			<table class="table">
+			<table class="table table-td-right">
 				<tbody>
 					<tr>
 						<th>TC level</th>

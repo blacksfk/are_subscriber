@@ -1,6 +1,6 @@
 <template>
 <div class="table-responsive">
-	<table class="table">
+	<table class="table table-td-right">
 		<tbody>
 			<tr>
 				<th>Tyre set</th>

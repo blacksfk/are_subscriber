@@ -5,7 +5,7 @@
 	<h3><span>{{ dist }}</span>km</h3>
 	<h3>{{ status }}</h3>
 	<div class="table-responsive">
-		<table class="table">
+		<table class="table table-td-right">
 			<tbody>
 				<tr>
 					<th>Tyre set</th>
