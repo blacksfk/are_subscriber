@@ -6,6 +6,7 @@
 	--primary: #11c6de;
 	--green: #40d865;
 	--red: #df1212;
+	--link: hsl(170, 100%, 50%);
 
 	--input-focus-colour: #ccc;
 
@@ -258,11 +259,16 @@ h1, h2, h3, h4, h5, h6 {
  * Links
  */
 .link {
-	color: var(--primary);
+	color: var(--link);
+	text-decoration: none;
+}
+
+.link:hover {
+	text-decoration: underline;
 }
 
 .link:visited {
-	color: var(--primary);
+	color: var(--link);
 }
 
 /**
