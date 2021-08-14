@@ -34,14 +34,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .container {
-	width: 60%;
 	margin: auto;
 }
 
 .content {
 	width: 100%;
 	margin: 1% auto;
-	padding: 20px;
 	background-color: var(--fg-primary);
 	border-radius: 4px;
 }
@@ -289,4 +287,33 @@ h1, h2, h3, h4, h5, h6 {
 
 .slide-from-top-enter-active, .slide-from-top-leave-active {
 	transition: all var(--dur-fade);
+}
+
+/**
+ * Responsive breakpoints
+ */
+@media only screen and (min-width: 1px) {
+	.container {
+		width: 100%;
+	}
+
+	.content {
+		padding: 20px 0;
+	}
+}
+
+@media only screen and (min-width: 900px) {
+	.container {
+		width: 80%;
+	}
+
+	.content {
+		padding: 20px;
+	}
+}
+
+@media only screen and (min-width: 1400px) {
+	.container {
+		width: 60%;
+	}
 }
