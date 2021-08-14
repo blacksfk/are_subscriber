@@ -209,6 +209,16 @@ h1, h2, h3, h4, h5, h6 {
 	background-color: var(--red);
 }
 
+.btn-borderless {
+	border: 0;
+	color: var(--primary);
+	background-color: transparent;
+}
+
+.btn-borderless:hover {
+	color: var(--primary);
+}
+
 /**
  * Forms
  */
