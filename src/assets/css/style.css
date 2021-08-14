@@ -4,8 +4,8 @@
 :root {
 	/* colours */
 	--primary: #11c6de;
-	--secondary: #40d865;
-	--tertiary: #df1212;
+	--green: #40d865;
+	--red: #df1212;
 
 	--input-focus-colour: #ccc;
 
@@ -178,22 +178,22 @@ h1, h2, h3, h4, h5, h6 {
 	background-color: var(--primary);
 }
 
-.btn-secondary {
-	color: var(--secondary);
-	border-color: var(--secondary);
+.btn-green {
+	color: var(--green);
+	border-color: var(--green);
 }
 
-.btn-secondary:hover {
-	background-color: var(--secondary);
+.btn-green:hover {
+	background-color: var(--green);
 }
 
-.btn-tertiary {
-	color: var(--tertiary);
-	border-color: var(--tertiary);
+.btn-red {
+	color: var(--red);
+	border-color: var(--red);
 }
 
-.btn-tertiary:hover {
-	background-color: var(--tertiary);
+.btn-red:hover {
+	background-color: var(--red);
 }
 
 /**

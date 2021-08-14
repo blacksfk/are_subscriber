@@ -23,11 +23,11 @@
 </template>
 <style>
 .laptime-good {
-	color: var(--secondary);
+	color: var(--green);
 }
 
 .laptime-amiss {
-	color: var(--tertiary);
+	color: var(--red);
 }
 </style>
 <script>
