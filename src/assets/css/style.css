@@ -70,6 +70,10 @@ h1, h2, h3, h4, h5, h6 {
 	flex: 1 1 20%;
 }
 
+.col-50 {
+	flex: 1 1 50%;
+}
+
 .col-start {
 	text-align: left;
 	align-self: flex-start;
