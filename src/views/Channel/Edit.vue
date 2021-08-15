@@ -1,7 +1,7 @@
 <template>
 	<modal @close="redirect">
 		<form action="new" method="post" @submit.prevent="update">
-			<h3>{{ chan.name }} ({{ id }})</h3>
+			<h3>{{ staticName }} ({{ id }})</h3>
 			<div class="input-group">
 				<label>Name</label>
 				<clearable-input type="text" name="name" id="name" v-model="chan.name"/>
@@ -41,6 +41,7 @@ let props = {
  */
 function data() {
 	return {
+		staticName: "",
 		chan: {
 			name: "",
 			password: "",
@@ -51,7 +52,7 @@ function data() {
 
 /**
  * Send the updated channel to the API via an AJAX PUT. On success,
- * "channel-updated" is emitted and the user is redirected to the 
+ * "updated" is emitted and the user is redirected to the
  * channels index page.
  * @return {Promise}
  */
@@ -62,6 +63,11 @@ function update() {
 		.catch(console.error);
 }
 
+/**
+ * Send an AJAX DELETE request. On success, "deleted" is emitted and the
+ * user is redirected to to the channels index page.
+ * @return {Promise}
+ */
 function remove() {
 	return this.$ajax.delete(`channel/${this.id}`)
 		.then(r => this.$emit("deleted", r.data))
@@ -76,10 +82,16 @@ function redirect() {
 	this.$router.push("/channel");
 }
 
+/**
+ * Created hook. Get the channel from the API.
+ * @return {Promise}
+ */
 function created() {
-	return this.$ajax.get(`channel/${this.id}`)
-		.then(r => this.chan.name = r.data.name)
-		.catch(console.error);
+	return this.$ajax.get(`channel/${this.id}`).then(r => {
+		this.chan.name = r.data.name;
+		this.staticName = r.data.name;
+	})
+	.catch(console.error);
 }
 
 export default {
