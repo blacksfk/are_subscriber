@@ -1,6 +1,6 @@
 <template>
 	<div class="clearable-input">
-		<input :type="type" :name="name" class="input" :value="value" @input="emit" :placeholder="placeholder">
+		<input :type="type" :name="name" class="input" :value="value" @input="emit" :placeholder="placeholder" ref="input">
 		<button class="clearable-input-btn" type="button" tabindex="-1" v-show="value && value.length > 0" @click="clear">&times;</button>
 	</div>
 </template>
@@ -38,11 +38,28 @@
 }
 </style>
 <script>
-// This component is only intended to be used for plaintext and password inputs
+/**
+ * Injected properties.
+ */
 let props = {
+	/**
+	 * Type of input. Supported: text, password.
+	 */
 	type: String,
+
+	/**
+	 * Name attribute.
+	 */
 	name: String,
+
+	/**
+	 * Value attribute.
+	 */
 	value: String,
+
+	/**
+	 * Placeholder attribute.
+	 */
 	placeholder: String
 };
 
@@ -55,11 +72,19 @@ function clear() {
 	this.$emit("input", "");
 }
 
+/**
+ * Focus the native input element.
+ */
+function focus() {
+	this.$refs.input.focus();
+}
+
 export default {
 	props,
 	methods: {
 		emit,
-		clear
+		clear,
+		focus
 	}
 };
 </script>
