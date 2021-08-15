@@ -1,10 +1,10 @@
 <template>
-	<modal @close="redirect">
+	<modal @close="redirect" @ready="$refs.name.focus()">
 		<form action="new" method="post" @submit.prevent="create">
 			<h3>Create a Channel</h3>
 			<div class="input-group">
 				<label>Name</label>
-				<clearable-input type="text" name="name" id="name" v-model="chan.name"/>
+				<clearable-input type="text" name="name" id="name" v-model="chan.name" ref="name"/>
 			</div>
 			<div class="input-group">
 				<label>Password</label>
