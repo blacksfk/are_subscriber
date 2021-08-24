@@ -9,12 +9,15 @@
 	position: relative;
 	display: flex;
 	flex-flow: row nowrap;
-	border-bottom: 1px solid var(--primary);
-	transition: border-bottom-color var(--dur-input);
+	padding: 5px;
+	background-color: var(--bg-primary);
+	border: 1px solid var(--primary);
+	border-radius: 4px;
+	transition: border-color var(--dur-input);
 }
 
 .clearable-input:focus-within {
-	border-bottom-color: var(--input-focus-colour);
+	border-color: var(--input-focus-colour);
 }
 
 .clearable-input > input {
