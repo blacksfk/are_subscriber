@@ -1,7 +1,7 @@
 <template>
 	<div class="clearable-input">
-		<input :type="type" :name="name" class="input" :value="value" @input="emit" :placeholder="placeholder" ref="input">
-		<button class="clearable-input-btn" type="button" tabindex="-1" v-show="value && value.length > 0" @click="clear">&times;</button>
+		<input :type="type" :name="name" class="input" :value="modelValue" @input="emit" :placeholder="placeholder" ref="input">
+		<button class="clearable-input-btn" type="button" tabindex="-1" v-show="modelValue && modelValue.length > 0" @click="clear">&times;</button>
 	</div>
 </template>
 <style>
@@ -58,7 +58,7 @@ let props = {
 	/**
 	 * Value attribute.
 	 */
-	value: String,
+	modelValue: String,
 
 	/**
 	 * Placeholder attribute.
@@ -67,12 +67,12 @@ let props = {
 };
 
 function emit(event) {
-	this.$emit("input", event.target.value);
+	this.$emit("update:modelValue", event.target.value);
 }
 
 function clear() {
 	this.$emit("clear");
-	this.$emit("input", "");
+	this.$emit("update:modelValue", "");
 }
 
 /**

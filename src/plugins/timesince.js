@@ -46,7 +46,7 @@ function timesince(date) {
 }
 
 export default {
-	install(Vue) {
-		Vue.prototype.$timesince = timesince;
+	install(app) {
+		app.config.globalProperties.$timesince = timesince;
 	}
-}
+};

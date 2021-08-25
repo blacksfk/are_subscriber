@@ -38,10 +38,8 @@ function run(f, context, args) {
 	f.apply(context, args);
 }
 
-function install(Vue) {
-	Vue.prototype.$debounce = debounce;
-}
-
 export default {
-	install
+    install(app) {
+        app.config.globalProperties.$debounce = debounce;
+    }
 };

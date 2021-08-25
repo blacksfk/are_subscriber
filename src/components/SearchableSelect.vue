@@ -1,6 +1,6 @@
 <template>
 <div class="searchable-select">
-	<clearable-input class="searchable-select-input" type="text" :name="name" :placeholder="placeholder" :value="input" @input="debouncedInput" @clear="clearInput"/>
+	<clearable-input class="searchable-select-input" type="text" :name="name" :placeholder="placeholder" :model-value="input" @update:modelValue="debouncedInput" @clear="clearInput"/>
 	<button type="button" tabindex="-1" class="btn btn-primary" @click="visible = !visible">
 		<!-- show down arrow when options not visible -->
 		<span v-show="!visible">&#8964;</span>
@@ -59,7 +59,7 @@ let props = {
 	/**
 	 * Selected option.
 	 */
-	value: Object,
+	modelValue: Object,
 
 	/**
 	 * HTML input name attribute value (passed down to clearable-input).
@@ -107,7 +107,7 @@ function data() {
 		 * of the key displayKey in the value object.
 		 * @type {any}
 		 */
-		input: this.value[this.displayKey]
+		input: this.modelValue[this.displayKey]
 	};
 }
 
@@ -146,8 +146,8 @@ let watch = {
 	 * Watches the value property for changes.
 	 * @return {void}
 	 */
-	value() {
-		this.input = this.value[this.displayKey];
+	modelValue() {
+		this.input = this.modelValue[this.displayKey];
 	}
 };
 
@@ -166,7 +166,7 @@ function created() {
  */
 function emit(option) {
 	this.visible = false;
-	this.$emit("input", option);
+	this.$emit("update:modelValue", option);
 }
 
 /**

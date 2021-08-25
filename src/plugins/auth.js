@@ -1,4 +1,5 @@
 import Hawk from "hawk"
+import {reactive} from "vue";
 
 /**
  * Hawk algorithm.
@@ -24,7 +25,7 @@ function User(id = "", key = "", name = "") {
 
 /**
  * Auth prototype.
- * @param {User}    reactiveUser   Must be made reactive with Vue.observable.
+ * @param {User}    reactiveUser   Must be made reactive with Vue.reactive.
  * @param {Storage} browserStorage Browser storage API.
  */
 function Auth(reactiveUser, browserStorage) {
@@ -121,34 +122,42 @@ Object.defineProperty(Auth.prototype, "authenticated", {
 });
 
 /**
- * Embed an instance of `Auth` into Vue's prototype as $auth.
- * config: {
- * 	// required
- * 	storage: window.sessionStorage // either of the storage APIs
- * }
- * @param  {Vue}    Vue
- * @param  {Object} config
- * @return {void}
+ * Load a user from the given browser storage.
+ * @param  {Storage} storage Eg.: window.localStorage, window.sessionStorage.
+ * @return {User}            Empty if a user wasn't found in storage.
  */
-function install(Vue, config) {
-	let user;
-	let str = config.storage.getItem(STORAGE_USER_KEY);
+function load(storage) {
+	let user = new User();
+	let str = storage.getItem(STORAGE_USER_KEY);
 
 	if (str) {
 		// user exists in storage, parse as JSON
 		let obj = JSON.parse(str);
 
-		user = new User(obj.id, obj.key, obj.name);
-	} else {
-		// user does not exist in storage
-		user = new User();
+		user.id = obj.id;
+		user.key = obj.key;
+		user.name = obj.name;
 	}
 
-	// make the user object's properties reactive
-	let reactive = Vue.observable(user);
+	return user;
+}
 
-	// embed into Vue's prototype
-	Vue.prototype.$auth = new Auth(reactive, config.storage);
+/**
+ * Embed an instance of `Auth` into `app`'s global properties as $auth.
+ * config: {
+ * 	// required
+ * 	storage: window.sessionStorage // either of the storage APIs
+ * }
+ * @param  {Vue}    app
+ * @param  {Object} config
+ * @return {void}
+ */
+function install(app, config) {
+	// make the user's properties reactive
+	let user = reactive(load(config.storage));
+	let auth = new Auth(user, config.storage);
+
+	app.config.globalProperties.$auth = auth;
 }
 
 export default {

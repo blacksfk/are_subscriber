@@ -1,9 +1,9 @@
 import Axios from "axios";
 
-function install(Vue, config) {
+function install(app, config) {
 	let axios = Axios.create(config);
 
-	Vue.prototype.$ajax = axios;
+	app.config.globalProperties.$ajax = axios;
 }
 
 export default {

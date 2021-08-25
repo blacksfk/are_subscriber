@@ -1,6 +1,6 @@
 <template>
 <div class="tab-row">
-	<div class="tab-row-item" v-for="(item, i) in items" :class="{'tab-row-item-active': value === i}" @click="emit(i)">{{ item }}</div>
+	<div class="tab-row-item" v-for="(item, i) in items" :class="{'tab-row-item-active': modelValue === i}" @click="emit(i)">{{ item }}</div>
 </div>
 </template>
 <style>
@@ -49,7 +49,7 @@ let props = {
 	/**
 	 * The currently selected tab.
 	 */
-	value: Number,
+	modelValue: Number,
 
 	/**
 	 * Array of strings to be used for the tab names.
@@ -58,12 +58,12 @@ let props = {
 };
 
 /**
- * Event emitter. Emits an "input" event when a tab is clicked.
+ * Event emitter. Emits an "update:modelValue" event when a tab is clicked.
  * @param  {Number} i
  * @return {void}
  */
 function emit(i) {
-	this.$emit("input", i);
+	this.$emit("update:modelValue", i);
 }
 
 export default {
