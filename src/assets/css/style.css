@@ -50,10 +50,6 @@ h1, h2, h3, h4, h5, h6 {
 	padding: 0 20px;
 }
 
-.content-narrow {
-	width: 50%;
-}
-
 .hidden-scrollbars {
 	overflow: hidden;
 }
@@ -316,10 +312,18 @@ h1, h2, h3, h4, h5, h6 {
 	.container {
 		width: 100%;
 	}
+
+	.content-narrow {
+		width: 100%;
+	}
 }
 
 @media only screen and (min-width: 900px) {
 	.container {
+		width: 80%;
+	}
+
+	.content-narrow {
 		width: 80%;
 	}
 }
@@ -327,5 +331,9 @@ h1, h2, h3, h4, h5, h6 {
 @media only screen and (min-width: 1400px) {
 	.container {
 		width: 60%;
+	}
+
+	.content-narrow {
+		width: 50%;
 	}
 }
