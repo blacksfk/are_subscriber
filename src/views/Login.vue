@@ -30,7 +30,7 @@ let props = {
 	/**
 	 * Redirect to this URL once login is successful.
 	 */
-	redirect: String
+	redirect: {type: String, default: ""}
 }
 
 /**
