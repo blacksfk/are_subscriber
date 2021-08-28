@@ -73,6 +73,9 @@ function emit(event) {
 function clear() {
 	this.$emit("clear");
 	this.$emit("update:modelValue", "");
+
+	// re-focus the cleared input
+	this.focus();
 }
 
 /**
