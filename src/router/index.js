@@ -6,7 +6,13 @@ const routes = [
 		component: () => import("@/views/Home.vue")
 	},
 	{
+		path: "/login",
+		component: () => import("@/views/Login.vue"),
+		props: route => ({redirect: route.query.redirect})
+	},
+	{
 		path: "/channel",
+		meta: {authGuard: true},
 		component: () => import("@/views/Channel/Index.vue"),
 		children: [
 			{
@@ -22,9 +28,25 @@ const routes = [
 	}
 ];
 
-let router = createRouter({
-	routes,
-	history: createWebHistory(process.env.BASE_URL)
-});
+function install(app, conf) {
+	let auth = app.config.globalProperties.$auth;
+	let router = createRouter({
+		routes,
+		history: createWebHistory(conf.baseURL)
+	});
 
-export default router;
+	router.beforeEach(to => {
+		if (to.meta.authGuard && !auth.authenticated) {
+			return {
+				path: "/login",
+				query: {redirect: to.fullPath}
+			}
+		}
+	});
+
+	app.use(router);
+}
+
+export default {
+	install
+};
