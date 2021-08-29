@@ -106,6 +106,9 @@ Object.defineProperty(Auth.prototype, "user", {
 		this._user.id = obj.id;
 		this._user.key = obj.key;
 		this._user.name = obj.name;
+
+		// update the user in storage
+		this.save();
 	}
 });
 
