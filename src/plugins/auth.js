@@ -78,13 +78,11 @@ function Auth(reactiveUser, browserStorage) {
 	}
 
 	/**
-	 * Update the hawk client's offset from the server's clock.
-	 * @param  {Number} serverTime
-	 * @return {void}
+	 * Set the offset (in seconds) that is passed down to the hawk library.
+	 * @param {Number} o
 	 */
-	this.updateOffset = function(serverTime) {
-		// update the local offset by calculating an absolute value
-		offset = Math.abs(Date.now() - serverTime);
+	this.setOffset = function(o) {
+		offset = o;
 	}
 }
 
