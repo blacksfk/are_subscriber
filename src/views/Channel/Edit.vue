@@ -57,7 +57,7 @@ function data() {
  * @return {Promise}
  */
 function update() {
-	return this.$ajax.put(`channel/${this.id}`, this.chan)
+	return this.$ajaxWithAuth.put(`channel/${this.id}`, this.chan)
 		.then(r => this.$emit("updated", r.data))
 		.then(this.redirect)
 		.catch(console.error);
@@ -69,7 +69,7 @@ function update() {
  * @return {Promise}
  */
 function remove() {
-	return this.$ajax.delete(`channel/${this.id}`)
+	return this.$ajaxWithAuth.delete(`channel/${this.id}`)
 		.then(r => this.$emit("deleted", r.data))
 		.then(this.redirect)
 		.catch(console.error);
@@ -87,7 +87,7 @@ function redirect() {
  * @return {Promise}
  */
 function created() {
-	return this.$ajax.get(`channel/${this.id}`).then(r => {
+	return this.$ajaxWithAuth.get(`channel/${this.id}`).then(r => {
 		this.chan.name = r.data.name;
 		this.staticName = r.data.name;
 	})

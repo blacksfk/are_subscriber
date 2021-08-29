@@ -46,7 +46,7 @@ function data() {
  * @return {Promise}
  */
 function create() {
-	return this.$ajax.post("channel", this.chan)
+	return this.$ajaxWithAuth.post("channel", this.chan)
 		.then(r => this.$emit("created", r.data))
 		.then(this.redirect)
 		.catch(console.error);
