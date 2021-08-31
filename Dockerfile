@@ -25,8 +25,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# nginx
-FROM nginx:alpine
+# caddy
+FROM caddy:alpine
 
 # copy compiled static files from first step
-COPY --from=builder /app/dist/. /usr/share/nginx/html/
+COPY --from=builder /app/dist/. /srv
