@@ -92,7 +92,7 @@ function chanDeleted(chan) {
  */
 function getChannels() {
 	return this.$ajax.get("channel")
-		.then(r => this.channels = r.data)
+		.then(r => this.channels = r.data || [])
 		.catch(console.error);
 }
 
