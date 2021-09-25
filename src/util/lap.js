@@ -5,12 +5,12 @@ import fmtLaptime from "./fmtLaptime";
  */
 function Lap(lapNo, sectorCount, driver) {
 	let rawTotal = -1;
+	let currSectorIdx = 0;
 
 	this.lapNo = lapNo;
 	this.sectors = [];
 	this.total = "";
 	this.driver = driver;
-	this.currSectorIndex = 0;
 	this.notes = [];
 
 	for (let i = 0; i < sectorCount; i++) {
@@ -19,11 +19,20 @@ function Lap(lapNo, sectorCount, driver) {
 	}
 
 	/**
-	 * Set an on-going sector time to this lap.
+	 * Set an on-going sector time.
 	 * @param {Number} time In milliseconds.
 	 */
 	this.setSector = function(time) {
-		this.sectors[this.currSectorIndex++] = time;
+		this.sectors[currSectorIdx] = time;
+	}
+
+	/**
+	 * Mark the current sector as complete.
+	 * @param  {Number} time In milliseconds.
+	 */
+	this.sectorComplete = function(time) {
+		this.setSector(time);
+		currSectorIdx++;
 	}
 
 	/**
