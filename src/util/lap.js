@@ -1,3 +1,5 @@
+import fmtLaptime from "./fmtLaptime";
+
 /**
  * Lap prototype.
  */
