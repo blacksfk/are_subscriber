@@ -13,6 +13,7 @@ import CurrLaptime from "@/components/CurrLaptime.vue";
 import fmtLaptime from "@/util/fmtLaptime";
 import Lap from "@/util/lap";
 import TelemetryBlueprint from "@/util/telemetryBlueprint";
+import CARS from "@/util/carEnum";
 
 /**
  * Instance variables.
@@ -112,6 +113,13 @@ let computed = {
 	playerName() {
 		return this.telemetry.player.firstname + " " +
 			this.telemetry.player.surname;
+	},
+
+	/**
+	 * Car name.
+	 */
+	car() {
+		return CARS[this.telemetry.car.model] || "";
 	}
 };
 

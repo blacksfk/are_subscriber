@@ -28,7 +28,7 @@
 			<div class="col-33 col-end"><span>{{ timeRemaining }} remaining</span></div>
 		</div>
 		<div class="row">
-			<div class="col-33 col-centre"><span>{{ playerName }}</span> | <span>{{ telemetry.car.model }}</span></div>
+			<div class="col-33 col-centre"><span>{{ playerName }}</span> | <span>{{ car }}</span></div>
 		</div>
 		<div class="row">
 			<div class="col-33 col-centre">
