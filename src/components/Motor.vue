@@ -4,7 +4,7 @@
 		<tbody>
 			<tr>
 				<th>Speed</th>
-				<td>{{ speed.toFixed(1) }}km/h</td>
+				<td><span>{{ speed.toFixed(1) }}</span>km/h</td>
 			</tr>
 			<tr>
 				<th>Gear</th>
@@ -17,14 +17,6 @@
 			<tr>
 				<th>Boost pressure</th>
 				<td>{{ motor.boostPressure }}</td>
-			</tr>
-			<tr>
-				<th>TC intervention</th>
-				<td>{{ tc }}</td>
-			</tr>
-			<tr>
-				<th>ABS intervention</th>
-				<td>{{ abs }}</td>
 			</tr>
 			<tr>
 				<th>Running</th>
@@ -55,8 +47,6 @@ const GEARS = ["R", "N", "1", "2", "3", "4", "5", "6", "7", "8"];
 let props = {
 	speed: Number,
 	gear: Number,
-	tc: Number,
-	abs: Number,
 	motor: Object
 };
 
