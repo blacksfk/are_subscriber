@@ -271,38 +271,82 @@ function onMessage(event) {
  * @return {void}
  */
 function newTelemetryData(data) {
-	// if (data.laptimes.prevSector) {
-	// 	this.currLap.setSector(data.laptimes.prevSector);
-	// }
-
-	// if (data.laptimes.prev) {
-	// 	let sectorCount = 0;
-
-	// 	if (data.track && data.track.sectors) {
-	// 		// new circuit
-	// 		sectorCount = data.track.sectors;
-	// 	} else {
-	// 		// same circuit
-	// 		sectorCount = this.telemetry.track.sectors;
-	// 	}
-
-	// 	// lap complete
-	// 	this.currLap.complete(data.laptimes.prev);
-
-	// 	// start a new lap
-	// 	this.currLap = new Lap(data.laps + 1, sectorCount);
-	// 	this.laps.unshift(this.currLap);
-	// }
-
-	// if (data.laptimes.currSector) {
-	// 	this.currLap.setSector(
-	// 		data.laptimes.currSectorIndex || this.telemetry.laptimes.currSectorIndex,
-	// 		data.laptimes.currSector
-	// 	);
-	// }
+	if (data.sessionChanged) {
+		// new session; reset all data
+		this.laps = [];
+		this.telemetry = new TelemetryBlueprint()
+	} else {
+		this.updateLaptimes(data);
+	}
 
 	// overwrite the old data with the new
 	recurse(this.telemetry, data);
+}
+
+/**
+ * Update lap time data.
+ * @param  {Object} data
+ * @return {void}
+ */
+function updateLaptimes(data) {
+	if (data.laptimes.prevSector) {
+		// sector completed
+		this.currLap.sectorComplete(data.laptimes.prevSector);
+	}
+
+	if (data.laptimes.prev) {
+		// lap completed
+		this.currLap.complete(data.laptimes.prev);
+
+		// start a new lap
+		this.currLap = new Lap(
+			data.laps + 1,
+			this.telemetry.track.sectors,
+			this.playerName
+		);
+
+		// insert as the first element
+		this.laps.unshift(this.currLap);
+	}
+
+	if (data.laptimes.currSector) {
+		// update the current sector time
+		this.currLap.setSector(data.laptimes.currSector);
+	}
+
+	// notable events
+	this.lapNotes(data);
+}
+
+/**
+ * Update the current or previous lap with notable occurrences.
+ * @param  {Object} data
+ * @return {void}
+ */
+function lapNotes(data) {
+	if (data.isInPitLane &&
+		!this.telemetry.isInPitLane) {
+		// in pit lane
+		if (data.laps === this.telemetry.laps) {
+			// on the same lap
+			this.currLap.inLap();
+		} else {
+			// came in on the previous lap
+			// ensure there are at least two laps
+			if (this.laps.length > 1) {
+				// the previous lap will always
+				// be the second element while
+				// unshift is being used
+				this.laps[1].inLap();
+			}
+		}
+	}
+
+	if (data.isInPitLane === false &&
+		this.telemetry.isInPitLane) {
+		// no longer in pit lane
+		this.currLap.outLap();
+	}
 }
 
 /**
