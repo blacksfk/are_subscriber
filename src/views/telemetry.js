@@ -110,8 +110,8 @@ let computed = {
 	 * Full player name.
 	 */
 	playerName() {
-		return this.telemetry.player.firstname + " " +
-			this.telemetry.player.surname;
+		return fullName(this.telemetry.player.firstname,
+			this.telemetry.player.surname);
 	},
 
 	/**
@@ -321,6 +321,16 @@ function recurse(prev, next) {
 			prev[k] = next[k];
 		}
 	}
+}
+
+/**
+ * Concatenate the driver's name.
+ * @param  {String} first
+ * @param  {String} last
+ * @return {String}
+ */
+function fullName(first, last) {
+	return `${first} ${last}`;
 }
 
 /**
