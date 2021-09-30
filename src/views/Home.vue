@@ -35,8 +35,7 @@
 				<curr-laptime :current="telemetry.laptimes.curr" :delta="telemetry.laptimes.delta" :delta-positive="telemetry.laptimes.isDeltaPositive" :valid="telemetry.laptimes.isValidLap"/>
 			</div>
 		</div>
-		<!-- <tab-row v-model="currTab" :items="['Telemetry', 'Laps']"/> -->
-		<tab-row v-model="currTab" :items="['Telemetry']"/>
+		<tab-row v-model="currTab" :items="['Telemetry', 'Laps']"/>
 	</div>
 
 	<!-- telemetry tab -->
@@ -66,33 +65,37 @@
 		</div>
 	</div>
 
-	<!-- lap times tab TODO: fix bugs -->
-	<!-- <div v-show="currTab === 1">
+	<!-- lap times tab -->
+	<div v-show="currTab === 1">
 		<div class="table-responsive">
 			<table class="table table-td-centre table-striped">
 				<thead>
 					<tr>
 						<th>Lap</th>
-						<th>Sector 1</th>
-						<th>Sector 2</th>
-						<th>Sector 3</th>
+						<th>Driver</th>
+						<th v-for="n in telemetry.track.sectors" :key="n">Sector {{ n }}</th>
 						<th>Lap time</th>
 						<th>Delta</th>
+						<th>Notes</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="lap in reversedLaps" :key="lap.lapNo">
+					<tr v-for="lap in laps" :key="lap.lapNo">
 						<td>{{ lap.lapNo }}</td>
-						<td>{{ lap.sectors[0] }}</td>
-						<td>{{ lap.sectors[1] }}</td>
-						<td>{{ lap.sectors[2] }}</td>
+						<td>{{ lap.driver }}</td>
+						<td v-for="n in telemetry.track.sectors" :key="n">{{ lap.sectors[n-1] }}</td>
 						<td>{{ lap.total }}</td>
 						<td>{{ lap.delta(telemetry.laptimes.best) }}</td>
+						<td>
+							<ul>
+								<li v-for="note in lap.notes">{{ note }}</li>
+							</ul>
+						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-	</div> -->
+	</div>
 </div>
 </template>
 <style>
