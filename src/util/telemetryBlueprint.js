@@ -5,6 +5,7 @@
 function TelemetryBlueprint() {
 	this.position = 0;
 	this.distanceTraveled = 0.0;
+	this.newSession = false;
 	this.laps = 0;
 	this.tyreSet = 0;
 	this.isBoxed = false;

@@ -271,8 +271,8 @@ function onMessage(event) {
  * @return {void}
  */
 function newTelemetryData(data) {
-	if (data.sessionChanged) {
-		// new session; reset all data
+	if (data.newSession) {
+		// reset all data
 		this.laps = [];
 		this.telemetry = new TelemetryBlueprint()
 	} else {
