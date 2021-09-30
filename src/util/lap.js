@@ -6,6 +6,8 @@ import fmtLaptime from "./fmtLaptime";
 function Lap(lapNo, sectorCount, driver) {
 	let rawTotal = -1;
 	let currSectorIdx = 0;
+	let inLap = false;
+	let outLap = false;
 
 	this.lapNo = lapNo;
 	this.sectors = [];
@@ -65,6 +67,34 @@ function Lap(lapNo, sectorCount, driver) {
 		let diff = rawTotal - best;
 
 		return `+${(diff / 1000).toFixed(3)}`;
+	}
+
+	/**
+	 * Mark this lap as an in lap.
+	 * @return {void}
+	 */
+	this.inLap = function() {
+		if (inLap) {
+			// already has been marked as an in lap
+			return;
+		}
+
+		inLap = true;
+		this.notes.push("In lap");
+	}
+
+	/**
+	 * Mark this lap as an out lap.
+	 * @return {void}
+	 */
+	this.outLap = function() {
+		if (outLap) {
+			// already has been marked as an out lap
+			return;
+		}
+
+		outLap = true;
+		this.notes.push("Out lap");
 	}
 }
 
