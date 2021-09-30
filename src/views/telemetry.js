@@ -20,6 +20,12 @@ import CARS from "@/util/carEnum";
 function data() {
 	return {
 		/**
+		 * True on first run or when the session has changed.
+		 * @type {Boolean}
+		 */
+		firstRun: true,
+
+		/**
 		 * Current tab index.
 		 * @type {Number}
 		 */
@@ -274,9 +280,18 @@ function newTelemetryData(data) {
 	if (data.newSession) {
 		// reset all data
 		this.laps = [];
-		this.telemetry = new TelemetryBlueprint()
+		this.telemetry = new TelemetryBlueprint();
+		this.firstRun = true;
 	} else {
 		this.updateLaptimes(data);
+	}
+
+	if (this.firstRun) {
+		this.firstRun = false;
+
+		// start a new lap
+		this.currLap = new Lap(data.laps + 1 || 1);
+		this.laps.push(this.currLap);
 	}
 
 	// overwrite the old data with the new
