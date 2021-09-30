@@ -123,7 +123,7 @@ let computed = {
 };
 
 /**
- * Created hook. Initialises the first lap and ets all
+ * Created hook. Initialises the first lap and gets all
  * channel objects from the API.
  */
 function created() {
@@ -399,7 +399,9 @@ export default {
 		onError,
 		onMessage,
 		newTelemetryData,
-		filterChannel
+		filterChannel,
+		updateLaptimes,
+		lapNotes
 	},
 	components: {
 		Modal,
