@@ -58,7 +58,7 @@
 				<inputs :electronics="telemetry.electronics" :tc="telemetry.tc" :abs="telemetry.abs" :input="telemetry.input"/>
 			</div>
 			<div class="telemetry-row-container-item">
-				<motor :motor="telemetry.motor" :speed="telemetry.speed" :gear="telemetry.gear" :tc="telemetry.tcIntervention" :abs="telemetry.absIntervention"/>
+				<motor :motor="telemetry.motor" :speed="telemetry.speed" :gear="telemetry.gear"/>
 			</div>
 			<div class="telemetry-row-container-item">
 				<tyres :brakes="telemetry.brakes" :tyres="telemetry.tyres"/>
