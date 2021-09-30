@@ -1,6 +1,12 @@
 import fmtLaptime from "./fmtLaptime";
 
 /**
+ * Blank lap time.
+ * @type {String}
+ */
+const BLANK = "--.--.---";
+
+/**
  * Lap prototype.
  */
 function Lap(lapNo, sectorCount, driver) {
@@ -57,9 +63,8 @@ function Lap(lapNo, sectorCount, driver) {
 	 * @return {String}      "+w.xyz"
 	 */
 	this.delta = function(best) {
-		if (rawTotal < 0) {
-			// lap not complete
-			return "";
+		if (rawTotal < 0 || best <= 0) {
+			return BLANK;
 		}
 
 		// assumumption: this laptime is always the same or
