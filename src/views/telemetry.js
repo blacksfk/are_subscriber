@@ -10,7 +10,6 @@ import ClearableInput from "@/components/ClearableInput.vue";
 import TabRow from "@/components/TabRow.vue";
 import InGameClock from "@/components/InGameClock.vue";
 import CurrLaptime from "@/components/CurrLaptime.vue";
-import fmtLaptime from "@/util/fmtLaptime";
 import Lap from "@/util/lap";
 import TelemetryBlueprint from "@/util/telemetryBlueprint";
 import CARS from "@/util/carEnum";
