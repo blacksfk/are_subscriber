@@ -35,7 +35,7 @@
 				<curr-laptime :current="telemetry.laptimes.curr" :delta="telemetry.laptimes.delta" :delta-positive="telemetry.laptimes.isDeltaPositive" :valid="telemetry.laptimes.isValidLap"/>
 			</div>
 		</div>
-		<tab-row v-model="currTab" :items="['Telemetry', 'Laps']"/>
+		<tab-row v-model="currTab" :items="['Telemetry', 'Laps', 'Strategy']"/>
 	</div>
 
 	<!-- telemetry tab -->
@@ -94,6 +94,19 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+	</div>
+
+	<!-- strategy tab -->
+	<div v-show="currTab === 2">
+		<div class="telemetry-row-container">
+			<div class="row">
+				<div class="telemetry-row-container-item">
+					<driving-time :driver-times="driverTimes"/>
+				</div>
+				<div class="telemetry-row-container-item"></div>
+				<div class="telemetry-row-container-item"></div>
+			</div>
 		</div>
 	</div>
 </div>
