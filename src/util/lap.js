@@ -55,6 +55,19 @@ function Lap(lapNo, sectorCount, driver) {
 	}
 
 	/**
+	 * Get the lap time in milliseconds. Returns zero
+	 * until the lap has been marked as complete.
+	 * @return {Number}
+	 */
+	this.milliseconds = function() {
+		if (rawTotal < 0) {
+			return 0;
+		}
+
+		return rawTotal;
+	}
+
+	/**
 	 * Get a delta from the best lap time in seconds. Returns
 	 * an empty string until the lap is marked as complete. It
 	 * is assumed that this lap will only ever be the same or slower
