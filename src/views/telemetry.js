@@ -10,9 +10,12 @@ import ClearableInput from "@/components/ClearableInput.vue";
 import TabRow from "@/components/TabRow.vue";
 import InGameClock from "@/components/InGameClock.vue";
 import CurrLaptime from "@/components/CurrLaptime.vue";
+import DrivingTime from "@/components/DrivingTime.vue";
+
 import Lap from "@/util/lap";
 import TelemetryBlueprint from "@/util/telemetryBlueprint";
 import CARS from "@/util/carEnum";
+import DriverTime from "@/util/driverTime";
 
 /**
  * Instance variables.
@@ -76,7 +79,13 @@ function data() {
 		 * Telmetry data as defined in the publisher client.
 		 * @type {Object}
 		 */
-		telemetry: new TelemetryBlueprint()
+		telemetry: new TelemetryBlueprint(),
+
+		/**
+		 * Array of DriverTime objects.
+		 * @type {Array}
+		 */
+		driverTimes: []
 	};
 }
 
@@ -280,6 +289,7 @@ function newTelemetryData(data) {
 	if (data.newSession) {
 		// reset all data
 		this.laps = [];
+		this.driverTimes = [];
 		this.telemetry = new TelemetryBlueprint();
 		this.firstRun = true;
 	} else {
@@ -296,6 +306,9 @@ function newTelemetryData(data) {
 
 	// overwrite the old data with the new
 	recurse(this.telemetry, data);
+
+	// update the driving time
+	this.updateDrivingTime();
 }
 
 /**
@@ -365,6 +378,39 @@ function lapNotes(data) {
 }
 
 /**
+ * Update the driving time of the current driver.
+ * Should be called after updating the telemetry
+ * object.
+ * @return {void}
+ */
+function updateDrivingTime() {
+	let dt = undefined;
+	let len = this.driverTimes.length;
+
+	// find the current driver in the drivers array
+	for (let i = 0; i < len; i++) {
+		if (this.playerName === this.driverTimes[i].name) {
+			dt = this.driverTimes[i];
+			break;
+		}
+	}
+
+	if (!dt) {
+		// not found, add a new one
+		dt = new DriverTime(
+			this.playerName,
+			this.telemetry.drivingTime.stintRemaining,
+			this.telemetry.drivingTime.totalRemaining);
+
+		this.driverTimes.push(dt);
+	} else {
+		// found, update the existing
+		dt.stintRemaining = this.telemetry.drivingTime.stintRemaining;
+		dt.totalRemaining = this.telemetry.drivingTime.totalRemaining;
+	}
+}
+
+/**
  * Update the previous object's values with the new object's values
  * using a depth-first approach.
  * @param  {Object} prev
@@ -416,7 +462,8 @@ export default {
 		newTelemetryData,
 		filterChannel,
 		updateLaptimes,
-		lapNotes
+		lapNotes,
+		updateDrivingTime,
 	},
 	components: {
 		Modal,
@@ -431,5 +478,6 @@ export default {
 		TabRow,
 		InGameClock,
 		CurrLaptime,
+		DrivingTime,
 	}
 };
