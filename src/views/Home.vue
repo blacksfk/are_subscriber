@@ -86,11 +86,7 @@
 						<td v-for="n in telemetry.track.sectors" :key="n">{{ (lap.sectors[n-1] / 1000).toFixed(3) }}</td>
 						<td>{{ lap.total }}</td>
 						<td>{{ lap.delta(telemetry.laptimes.best) }}</td>
-						<td>
-							<ul>
-								<li v-for="note in lap.notes">{{ note }}</li>
-							</ul>
-						</td>
+						<td>{{ lap.notes.join(", ") }}</td>
 					</tr>
 				</tbody>
 			</table>
