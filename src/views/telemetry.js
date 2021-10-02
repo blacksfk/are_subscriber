@@ -309,7 +309,7 @@ function newTelemetryData(data) {
 		this.driverTimes = [];
 		this.telemetry = new TelemetryBlueprint();
 		this.firstRun = true;
-	} else {
+	} else if (!this.firstRun) {
 		this.updateLaptimes(data);
 	}
 
