@@ -104,7 +104,9 @@
 				<div class="telemetry-row-container-item">
 					<driving-time :driver-times="driverTimes"/>
 				</div>
-				<div class="telemetry-row-container-item"></div>
+				<div class="telemetry-row-container-item">
+					<stint-fuel-economy :burn-rate="telemetry.fuel.rate" :fuel-remaining="telemetry.fuelRemaining" :stint-remaining="telemetry.drivingTime.stintRemaining" :total-remaining="telemetry.session.timeLeft" :recent-laps="recentLaps"/>
+				</div>
 				<div class="telemetry-row-container-item"></div>
 			</div>
 		</div>

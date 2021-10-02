@@ -11,11 +11,18 @@ import TabRow from "@/components/TabRow.vue";
 import InGameClock from "@/components/InGameClock.vue";
 import CurrLaptime from "@/components/CurrLaptime.vue";
 import DrivingTime from "@/components/DrivingTime.vue";
+import StintFuelEconomy from "@/components/StintFuelEconomy.vue";
 
 import Lap from "@/util/lap";
 import TelemetryBlueprint from "@/util/telemetryBlueprint";
 import CARS from "@/util/carEnum";
 import DriverTime from "@/util/driverTime";
+
+/**
+ * Number of laps in the recent lap times array.
+ * @type {Number}
+ */
+const RECENT_LAP_COUNT = 5;
 
 /**
  * Instance variables.
@@ -134,6 +141,16 @@ let computed = {
 	 */
 	car() {
 		return CARS[this.telemetry.car.model] || "";
+	},
+
+	/**
+	 * RECENT_LAP_COUNT most recent laps in reverse order.
+	 * I.e. The first element is the most recent lap.
+	 */
+	recentLaps() {
+		// start at the second element to avoid the lap
+		// in progress
+		return this.laps.slice(1, RECENT_LAP_COUNT);
 	}
 };
 
@@ -479,5 +496,6 @@ export default {
 		InGameClock,
 		CurrLaptime,
 		DrivingTime,
+		StintFuelEconomy,
 	}
 };
