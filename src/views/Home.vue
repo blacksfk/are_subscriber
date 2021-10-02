@@ -83,7 +83,7 @@
 					<tr v-for="lap in laps" :key="lap.lapNo">
 						<td>{{ lap.lapNo }}</td>
 						<td>{{ lap.driver }}</td>
-						<td v-for="n in telemetry.track.sectors" :key="n">{{ lap.sectors[n-1] }}</td>
+						<td v-for="n in telemetry.track.sectors" :key="n">{{ (lap.sectors[n-1] / 1000).toFixed(3) }}</td>
 						<td>{{ lap.total }}</td>
 						<td>{{ lap.delta(telemetry.laptimes.best) }}</td>
 						<td>
