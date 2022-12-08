@@ -1,5 +1,5 @@
 # latest node on alpine
-FROM node:alpine3.14 AS builder
+FROM node:lts-alpine AS builder
 
 # change working directory
 WORKDIR /app/
